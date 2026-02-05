@@ -4,84 +4,64 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Salt & Smoke Menu</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Fredericka+the+Great&family=Protest+Revolution&family=Stardos+Stencil:wght@400;700&family=WindSong&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Fredericka+the+Great&family=Protest+Revolution&family=Stardos+Stencil:wght@400;700&family=Truculenta:opsz,wght@12..72,100..900&family=WindSong&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Stardos+Stencil:wght@400;700&family=Truculenta:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    * { box-sizing: border-box; }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 140px;
+    * {
+      box-sizing: border-box;
     }
 
     body {
+      margin: 0;
       background-color: #f4f1ea;
       color: #2c2c2c;
       font-family: "Truculenta", sans-serif;
       line-height: 1.5;
     }
 
+    /* Header */
     header {
       background-color: #3b1f17;
-      color: #fff;
+      color: #ffffff;
       text-align: center;
-      padding: 20px 10px 10px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      padding: 20px 16px;
     }
 
     h1 {
       font-family: "Bungee Shade", sans-serif;
       margin: 0;
       font-size: 24px;
-      text-transform: uppercase;
       letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .subtitle {
-      font-size: 12px;
+      font-size: 13px;
       opacity: 0.8;
-      margin-bottom: 10px;
+      margin-top: 4px;
     }
 
-    .scroll-nav {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      white-space: nowrap;
-      padding: 10px 15px;
-      background: #4a2820;
-      scrollbar-width: none;
+    /* Simple navigation */
+    .menu-nav {
+      margin-top: 12px;
+      font-size: 14px;
     }
 
-    .scroll-nav::-webkit-scrollbar { display: none; }
-
-    .nav-pill {
+    .menu-nav a {
       color: #f3e1d8;
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 6px 16px;
-      border: 1px solid rgba(243,225,216,0.3);
-      border-radius: 20px;
-      text-transform: uppercase;
+      margin: 0 6px;
     }
 
-    .nav-pill:hover {
-      background: #f3e1d8;
-      color: #3b1f17;
+    .menu-nav a:hover {
+      text-decoration: underline;
     }
 
+    /* Main container */
     .container {
       max-width: 800px;
       margin: 0 auto;
@@ -89,20 +69,20 @@
     }
 
     section {
-      background: #fff;
+      background-color: #ffffff;
       padding: 20px;
-      margin-bottom: 40px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 32px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
     h2 {
       font-family: "Stardos Stencil", system-ui;
-      color: #3b1f17;
-      border-bottom: 3px solid #e4d1c5;
-      padding-bottom: 8px;
       margin-top: 0;
       font-size: 22px;
+      color: #3b1f17;
+      border-bottom: 2px solid #e4d1c5;
+      padding-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -110,20 +90,17 @@
     .section-note {
       font-size: 13px;
       color: #666;
-      margin-bottom: 15px;
-      background: #f9f9f9;
-      padding: 8px;
-      border-radius: 4px;
-      display: inline-block;
+      margin-bottom: 12px;
     }
 
+    /* Menu items */
     .menu-item {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 16px;
+      gap: 16px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
       border-bottom: 1px solid #eee;
-      padding-bottom: 12px;
     }
 
     .menu-item:last-child {
@@ -144,28 +121,12 @@
 
     .item-price {
       font-weight: 700;
-      color: #8a4b38;
       white-space: nowrap;
-      font-size: 15px;
+      color: #8a4b38;
     }
 
-    .combo-box {
-      background-color: #3b1f17;
-      color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .combo-grid {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    .tags-container {
+    /* Tags (sides & sauces) */
+    .tags {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -174,17 +135,17 @@
     .tag {
       background-color: #e4d1c5;
       color: #3b1f17;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 4px;
       font-size: 13px;
       font-weight: 600;
     }
 
     footer {
-      text-align: center;
-      padding: 40px 20px;
-      background: #3b1f17;
+      background-color: #3b1f17;
       color: #999;
+      text-align: center;
+      padding: 30px 16px;
       font-size: 12px;
     }
   </style>
@@ -196,128 +157,161 @@
   <h1>Salt & Smoke</h1>
   <div class="subtitle">BBQ · Bourbon · Beer</div>
 
-  <nav class="scroll-nav">
-    <a href="#appetizers" class="nav-pill">Appetizers</a>
-    <a href="#salads" class="nav-pill">Salads</a>
-    <a href="#sandwiches" class="nav-pill">Sandwiches</a>
-    <a href="#plates" class="nav-pill">Plates</a>
-    <a href="#sides" class="nav-pill">Sides</a>
-    <a href="#sauces" class="nav-pill">Sauces</a>
-    <a href="#meat" class="nav-pill">By Pound</a>
-    <a href="#drinks" class="nav-pill">Drinks</a>
-    <a href="#dessert" class="nav-pill">Dessert</a>
+  <nav class="menu-nav">
+    <a href="#appetizers">Appetizers</a> |
+    <a href="#salads">Salads</a> |
+    <a href="#sandwiches">Sandwiches</a> |
+    <a href="#plates">Plates</a> |
+    <a href="#sides">Sides</a> |
+    <a href="#sauces">Sauces</a> |
+    <a href="#meat">By Pound</a> |
+    <a href="#drinks">Drinks</a> |
+    <a href="#dessert">Dessert</a>
   </nav>
 </header>
 
 <div class="container">
 
 <section id="appetizers">
-<h2>Appetizers</h2>
+  <h2>Appetizers</h2>
 
-<div class="menu-item"><div><span class="item-name">Trashed Ribs</span><div class="item-desc">Sweet or BuffaLove Me · GF</div></div><div class="item-price">14.99</div></div>
-<div class="menu-item"><div><span class="item-name">Fried House Pickles</span><div class="item-desc">B&B pickles, dill spears, gherkins · flaxseed mayo</div></div><div class="item-price">8.99</div></div>
-<div class="menu-item"><div><span class="item-name">Hush Puppies</span><div class="item-desc">Maple butter</div></div><div class="item-price">6.99</div></div>
-<div class="menu-item"><div><span class="item-name">Deviled Eggs</span><div class="item-desc">With bacon · GF</div></div><div class="item-price">6.99</div></div>
-<div class="menu-item"><div><span class="item-name">Burnt End Toasted Ravs</span></div><div class="item-price">12.99</div></div>
-<div class="menu-item"><div><span class="item-name">Pimento Cheese Toasted Ravs</span></div><div class="item-price">12.99</div></div>
-<div class="menu-item"><div><span class="item-name">Fried Chicken Skins</span><div class="item-desc">Honey grain mustard · GF</div></div><div class="item-price">7.99</div></div>
-<div class="menu-item"><div><span class="item-name">Cherry Smoked Wings</span><div class="item-desc">Dry rub, sweet trashed, or buffalo · GF</div></div><div class="item-price">14.99</div></div>
-<div class="menu-item"><div><span class="item-name">Loaded Beef Fat Fries</span><div class="item-desc">Cheese sauce, bacon, scallions, Alabama ranch · add brisket chili +2.50</div></div><div class="item-price">9.99</div></div>
+  <div class="menu-item">
+    <div>
+      <div class="item-name">Trashed Ribs</div>
+      <div class="item-desc">Sweet or BuffaLove Me · GF</div>
+    </div>
+    <div class="item-price">14.99</div>
+  </div>
+
+  <div class="menu-item">
+    <div>
+      <div class="item-name">Fried House Pickles</div>
+      <div class="item-desc">B&B pickles, dill spears, gherkins · flaxseed mayo</div>
+    </div>
+    <div class="item-price">8.99</div>
+  </div>
+
+  <div class="menu-item">
+    <div>
+      <div class="item-name">Hush Puppies</div>
+      <div class="item-desc">Maple butter</div>
+    </div>
+    <div class="item-price">6.99</div>
+  </div>
 </section>
 
 <section id="salads">
-<h2>Salads</h2>
-<div class="section-note">Half 8.99 · Full 13.99 · Side 4.99 · Add meat: Brisket +6 · Pork/Chicken +5</div>
+  <h2>Salads</h2>
+  <div class="section-note">
+    Half 8.99 · Full 13.99 · Side 4.99 · Add meat: Brisket +6 · Pork/Chicken +5
+  </div>
 
-<div class="menu-item"><div><span class="item-name">Caesar</span><div class="item-desc">Romaine, brioche croutons, parmesan</div></div></div>
-<div class="menu-item"><div><span class="item-name">Kale Crunch (GF)</span><div class="item-desc">Walnuts, goat cheese, dried apricots</div></div></div>
-<div class="menu-item"><div><span class="item-name">Mixed Green</span><div class="item-desc">Roasted red peppers, white cheddar, balsamic vinaigrette</div></div></div>
+  <div class="menu-item">
+    <div>
+      <div class="item-name">Caesar</div>
+      <div class="item-desc">Romaine, brioche croutons, parmesan</div>
+    </div>
+  </div>
+
+  <div class="menu-item">
+    <div>
+      <div class="item-name">Kale Crunch (GF)</div>
+      <div class="item-desc">Walnuts, goat cheese, dried apricots</div>
+    </div>
+  </div>
 </section>
 
 <section id="sandwiches">
-<h2>Sandwiches</h2>
+  <h2>Sandwiches</h2>
 
-<div class="menu-item"><div><span class="item-name">Pulled Pork</span><div class="item-desc">Coleslaw, house pickles</div></div><div class="item-price">14.99</div></div>
-<div class="menu-item"><div><span class="item-name">Brisket</span><div class="item-desc">Burnt end mayo, tobacco onions</div></div><div class="item-price">16.99</div></div>
-<div class="menu-item"><div><span class="item-name">Pulled Chicken</span><div class="item-desc">Pimento cheddar, street corn relish</div></div><div class="item-price">14.99</div></div>
-<div class="menu-item"><div><span class="item-name">Cherry Smoked Salmon</span><div class="item-desc">Pickled onions, greens, smoked tomato mayo</div></div><div class="item-price">16.99</div></div>
-<div class="menu-item"><div><span class="item-name">BLT</span><div class="item-desc">Bacon, smoked tomato, paprika aioli</div></div><div class="item-price">13.99</div></div>
-<div class="menu-item"><div><span class="item-name">Fried Jalapeño + Cheddar Bologna</span><div class="item-desc">Chow chow, honey grain mustard</div></div><div class="item-price">13.99</div></div>
+  <div class="menu-item">
+    <div>
+      <div class="item-name">Pulled Pork</div>
+      <div class="item-desc">Coleslaw, house pickles</div>
+    </div>
+    <div class="item-price">14.99</div>
+  </div>
 
-<div class="section-note">
-Add-ons: Brisket or Salmon +6 · Pork, Chicken, Falafel, or Bologna +5
-</div>
+  <div class="menu-item">
+    <div>
+      <div class="item-name">Brisket</div>
+      <div class="item-desc">Burnt end mayo, tobacco onions</div>
+    </div>
+    <div class="item-price">16.99</div>
+  </div>
 </section>
 
 <section id="plates">
-<h2>Plates & Combos</h2>
+  <h2>Plates</h2>
 
-<div class="combo-box">
-Bestie Combo<br>
-2 meats $21.99 · 3 meats $25.99 · 4 meats $29.99
-</div>
+  <div class="menu-item">
+    <div class="item-name">Pulled Pork Plate</div>
+    <div class="item-price">18.99</div>
+  </div>
 
-<div class="menu-item"><div><span class="item-name">Pulled Pork Plate</span></div><div class="item-price">18.99</div></div>
-<div class="menu-item"><div><span class="item-name">Brisket Plate</span></div><div class="item-price">22.99</div></div>
-<div class="menu-item"><div><span class="item-name">Pulled Chicken Plate</span></div><div class="item-price">18.99</div></div>
-<div class="menu-item"><div><span class="item-name">Smoked Wings Plate</span></div><div class="item-price">20.99</div></div>
-<div class="menu-item"><div><span class="item-name">St. Louis Ribs</span></div><div class="item-price">19.99 / 29.99</div></div>
-<div class="menu-item"><div><span class="item-name">Fried Jalapeño + Cheddar Bologna Plate</span></div><div class="item-price">17.99</div></div>
+  <div class="menu-item">
+    <div class="item-name">Brisket Plate</div>
+    <div class="item-price">22.99</div>
+  </div>
 </section>
 
 <section id="sides">
-<h2>Sides</h2>
-<div class="tags-container">
-<span class="tag">Beef Fat Fries</span>
-<span class="tag">Pit Beans</span>
-<span class="tag">Sweet Pepper Potato Salad</span>
-<span class="tag">Coleslaw</span>
-<span class="tag">White Cheddar Mac</span>
-<span class="tag">Green Bean + Tomato Salad</span>
-<span class="tag">Creamed Corn</span>
-<span class="tag">Brisket Chili</span>
-<span class="tag">Special Side</span>
-</div>
+  <h2>Sides</h2>
+  <div class="tags">
+    <span class="tag">Beef Fat Fries</span>
+    <span class="tag">Pit Beans</span>
+    <span class="tag">Mac & Cheese</span>
+    <span class="tag">Coleslaw</span>
+    <span class="tag">Creamed Corn</span>
+  </div>
 </section>
 
 <section id="sauces">
-<h2>Sauces</h2>
-<div class="tags-container">
-<span class="tag">My Sweet Bestie</span>
-<span class="tag">Hotangy</span>
-<span class="tag">Alabama Ranch</span>
-<span class="tag">Mustarolina</span>
-<span class="tag">I Can’t Even</span>
-<span class="tag">BuffaLove Me</span>
-</div>
+  <h2>Sauces</h2>
+  <div class="tags">
+    <span class="tag">My Sweet Bestie</span>
+    <span class="tag">Hotangy</span>
+    <span class="tag">Alabama Ranch</span>
+    <span class="tag">BuffaLove Me</span>
+  </div>
 </section>
 
 <section id="meat">
-<h2>Meat by the Pound</h2>
-<div class="menu-item"><span class="item-name">Pulled Pork</span><span class="item-price">18.99 / lb</span></div>
-<div class="menu-item"><span class="item-name">Chicken</span><span class="item-price">18.99 / lb</span></div>
-<div class="menu-item"><span class="item-name">Brisket</span><span class="item-price">24.99 / lb</span></div>
-<div class="menu-item"><span class="item-name">Ribs</span><span class="item-price">24.99 / slab</span></div>
+  <h2>Meat by the Pound</h2>
+
+  <div class="menu-item">
+    <div class="item-name">Pulled Pork</div>
+    <div class="item-price">18.99 / lb</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-name">Brisket</div>
+    <div class="item-price">24.99 / lb</div>
+  </div>
 </section>
 
 <section id="drinks">
-<h2>Drinks</h2>
-<div class="menu-item"><span class="item-name">Fountain Drinks</span><span class="item-price">2.99</span></div>
-<div class="menu-item"><span class="item-name">San Pellegrino (500ml)</span><span class="item-price">2.99</span></div>
+  <h2>Drinks</h2>
+
+  <div class="menu-item">
+    <div class="item-name">Fountain Drinks</div>
+    <div class="item-price">2.99</div>
+  </div>
 </section>
 
 <section id="dessert">
-<h2>Dessert</h2>
-<div class="menu-item"><span class="item-name">Lemon Gooey Butter Cake</span><span class="item-price">8.99</span></div>
-<div class="menu-item"><span class="item-name">Dark Chocolate Brownie</span><span class="item-price">7.99</span></div>
-<div class="menu-item"><span class="item-name">Brown Butter Pecan Bar</span><span class="item-price">9.99</span></div>
-<div class="menu-item"><span class="item-name">Ice Cream + Sorbet</span><span class="item-price">5.99 / 2.99</span></div>
+  <h2>Dessert</h2>
+
+  <div class="menu-item">
+    <div class="item-name">Lemon Gooey Butter Cake</div>
+    <div class="item-price">8.99</div>
+  </div>
 </section>
 
 </div>
 
 <footer>
-SALT + SMOKE BBQ · 314-727-0200
+  SALT + SMOKE BBQ · 314-727-0200
 </footer>
 
 </body>
