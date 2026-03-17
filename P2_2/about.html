@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - About v2 (Gallery Style)</title>
+    <style>
+        :root {
+            --bg-paper: #F3EFE6; 
+            --text-dark: #2A2A2A; 
+            --cinnabar: #8A3B36; 
+            --accent-gold: #C6A254;
+        }
+
+        body {
+            background-color: var(--bg-paper);
+            color: var(--text-dark);
+            font-family: "Optima", "Baskerville", serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 100;
+        }
+
+        .split-layout {
+            display: flex;
+            width: 100%;
+        }
+
+        .side-visual {
+            width: 40%;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(138, 59, 54, 0.03);
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .side-visual .watermark {
+            font-family: "Noto Serif CJK TC", serif;
+            font-size: 35vh;
+            color: var(--cinnabar);
+            opacity: 0.1;
+        }
+
+        .side-visual h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            letter-spacing: 0.1em;
+            margin-top: -2rem;
+            color: var(--text-dark);
+        }
+
+        .main-scroll {
+            width: 60%;
+            padding: 10vh 8vw;
+            box-sizing: border-box;
+        }
+
+        .top-nav { margin-bottom: 5vh; }
+        .top-nav a { text-decoration: none; color: var(--cinnabar); font-weight: bold; letter-spacing: 0.1em; }
+
+        .intro-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 4rem;
+            color: #333;
+        }
+
+        .instruction-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .step-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--accent-gold);
+            transition: transform 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateX(10px);
+            border-left-color: var(--cinnabar);
+        }
+
+        .step-num {
+            font-size: 0.9rem;
+            color: var(--accent-gold);
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .step-card h2 {
+            margin: 0 0 1rem 0;
+            font-size: 1.5rem;
+            font-weight: normal;
+        }
+
+        .step-card p {
+            line-height: 1.6;
+            color: #666;
+            margin: 0;
+        }
+
+        @media (max-width: 1024px) {
+            body { display: block; }
+            .side-visual {
+                width: 100%;
+                height: 40vh;
+                position: relative;
+            }
+            .side-visual .watermark { font-size: 20vh; }
+            .main-scroll {
+                width: 100%;
+                padding: 5vh 10vw;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="split-layout">
+        <section class="side-visual">
+            <div class="watermark">易</div>
+            <h1>I CHING<br><small style="font-size: 1rem; opacity: 0.5;">The Book of Changes</small></h1>
+        </section>
+
+        <main class="main-scroll">
+            <nav class="top-nav"><a href="index.html">← RETURN HOME</a></nav>
+
+            <p class="intro-text">
+                For countless centuries, the I Ching has served as a timeless guide to understanding the cosmic vibrations of the human experience.
+            </p>
+
+            <div class="instruction-grid">
+                <div class="step-card">
+                    <span class="step-num">STEP 01</span>
+                    <h2>The Question</h2>
+                    <p>Focus your mind. Avoid "yes" or "no" questions. Instead, ask "What if..." or "What is this situation all about?" This allows the oracle to provide a commentary-style insight.</p>
+                </div>
+
+                <div class="step-card">
+                    <span class="step-num">STEP 02</span>
+                    <h2>Casting Coins</h2>
+                    <p>Using three coins, the randomness reflects your current energetic state. Six casts build a hexagram from the bottom up, creating a map of your situation.</p>
+                </div>
+
+                <div class="step-card">
+                    <span class="step-num">STEP 03</span>
+                    <h2>Interpreting</h2>
+                    <p>The hexagram you create is a mirror. Apply its wisdom introspectively. Your intuition will confirm if you have been enlightened by the truth.</p>
+                </div>
+            </div>
+
+            <footer style="margin-top: 6rem; opacity: 0.3; font-size: 0.8rem;">
+                © 1000 - 750 BC
+            </footer>
+        </main>
+    </div>
+
+</body>
+</html>

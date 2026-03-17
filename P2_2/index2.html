@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - Modern Scroll UI</title>
+    <style>
+        :root {
+            --bg-paper: #F3EFE6; 
+            --text-dark: #1A1A1A; 
+            --cinnabar: #8A3B36; 
+            --accent: #C6A254;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-paper);
+            color: var(--text-dark);
+            font-family: "Optima", "Baskerville", serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 500;
+        }
+
+        .sticky-header {
+            position: fixed; top: 0; width: 100%; height: 70px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5vw; box-sizing: border-box;
+            background: rgba(243, 239, 230, 0.85);
+            backdrop-filter: blur(15px); z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo { 
+            font-family: "Noto Serif CJK TC", serif; 
+            font-size: 1.4rem; color: var(--cinnabar); 
+            letter-spacing: 0.2em; text-decoration: none;
+        }
+
+        .nav-menu { display: flex; gap: 2.5rem; }
+        .nav-menu a {
+            text-decoration: none; color: #777; font-size: 0.85rem;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            transition: 0.3s; position: relative; padding: 5px 0;
+        }
+
+        .nav-menu a.active { color: var(--cinnabar); }
+        .nav-menu a::after {
+            content: ""; position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
+            background-color: var(--cinnabar); transition: 0.4s;
+        }
+        .nav-menu a:hover, .nav-menu a.active { color: var(--text-dark); }
+        .nav-menu a.active::after { width: 100%; }
+
+        section {
+            height: 100vh; width: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative; padding: 0 10vw; box-sizing: border-box;
+        }
+
+        .section-content {
+            max-width: 800px; text-align: center; z-index: 10;
+        }
+
+        h2 { font-size: 4rem; letter-spacing: 0.2em; text-transform: uppercase; margin: 0; font-weight: 300; }
+        p { font-size: 1.1rem; line-height: 2; color: #555; margin: 2rem 0; font-family: "Baskerville", serif; }
+
+        .ui-btn {
+            display: inline-block; padding: 0.9rem 2.5rem;
+            border: 1px solid var(--text-dark); text-decoration: none;
+            color: var(--text-dark); letter-spacing: 0.2em; text-transform: uppercase;
+            font-size: 0.8rem; transition: 0.3s;
+        }
+        .ui-btn:hover { background: var(--text-dark); color: var(--bg-paper); transform: translateY(-3px); }
+
+        .mountains-svg {
+            position: absolute; bottom: 0; width: 100%; height: 40vh;
+            z-index: 1; opacity: 0.2; pointer-events: none;
+        }
+
+        #hero { background: var(--bg-paper); }
+        #about { background: #EAE5D8; }
+        #hexagrams { background: #E1DCD0; }
+        #elements { background: #D9D3C7; }
+        #toss { background: #D0CABF; }
+
+        .scroll-down {
+            position: absolute; bottom: 5vh; font-size: 0.7rem; 
+            letter-spacing: 0.4em; color: #999; text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; } 
+            h2 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="sticky-header">
+        <a href="#hero" class="logo">易經</a>
+        <nav class="nav-menu">
+            <a href="#hero" class="nav-link active">Home</a>
+            <a href="#about" class="nav-link">History</a>
+            <a href="#hexagrams" class="nav-link">64 Patterns</a>
+            <a href="#elements" class="nav-link">Cosmology</a>
+            <a href="#toss" class="nav-link" style="color: var(--cinnabar);">Oracle</a>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="section-content">
+            <div style="font-family: 'Noto Serif CJK TC'; font-size: 2rem; color: var(--cinnabar); margin-bottom: 1rem; letter-spacing: 0.5em;">易經</div>
+            <h2 style="font-size: 6rem;">I CHING</h2>
+            <p>A bridge between ancient wisdom and the modern seeker. Experience the binary rhythm of the universe through an interactive journey.</p>
+        </div>
+        <div class="scroll-down">Scroll to explore</div>
+    </section>
+
+    <section id="about">
+        <div class="section-content">
+            <h2>The History</h2>
+            <p>Born three thousand years ago, the I Ching is the oldest of the Chinese classics. It describes a world in constant flux, where the only certainty is change itself.</p>
+            <a href="about.html" class="ui-btn">Enter Archives</a>
+        </div>
+    </section>
+
+    <section id="hexagrams">
+        <div class="section-content">
+            <h2>64 Patterns</h2>
+            <p>Every possible state of human experience is encoded into 64 archetypal patterns. Explore the wheel of existence and find your current position.</p>
+            <a href="hexagrams.html" class="ui-btn">View Wheel</a>
+        </div>
+    </section>
+
+    <section id="elements">
+        <div class="section-content">
+            <h2>Cosmology</h2>
+            <p>The universe is built on eight fundamental elements. From the creative strength of Heaven to the receptive depths of Earth.</p>
+            <a href="elements.html" class="ui-btn">Explore Trigrams</a>
+        </div>
+    </section>
+
+    <section id="toss">
+        <div class="section-content">
+            <h2>The Oracle</h2>
+            <p>The pattern of the falling coins reflects the cosmic vibrations emanating from your mind. Ask your question and cast the coins.</p>
+            <a href="toss.html" class="ui-btn" style="background: var(--cinnabar); color: white; border-color: var(--cinnabar);">Begin Divination</a>
+        </div>
+    </section>
+
+    <script>
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLinks.forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href").includes(current)) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

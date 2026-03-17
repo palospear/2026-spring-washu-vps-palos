@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - About The Book of Changes</title>
+    <style>
+        :root {
+            --bg-paper: #F3EFE6; 
+            --text-dark: #2A2A2A; 
+            --cinnabar: #8A3B36; 
+            --m-2: #8FA68E; 
+            --m-3: #6B836A; 
+            --m-4: #475F46; 
+        }
+
+        body {
+            background-color: var(--bg-paper); color: var(--text-dark);
+            font-family: "Optima", "Baskerville", "Georgia", serif;
+            margin: 0; min-height: 100vh; overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 宣纸噪点底纹 */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 50;
+        }
+
+        .top-nav { position: absolute; top: 5vh; left: 5vw; z-index: 20; }
+        .top-nav a { text-decoration: none; color: var(--text-dark); font-size: 1.2rem; letter-spacing: 0.1em; transition: color 0.3s; }
+        .top-nav a:hover { color: var(--cinnabar); }
+
+        .watermark {
+            position: fixed; top: 50%; right: -5%; transform: translateY(-50%);
+            font-family: "Noto Serif CJK TC", "Songti TC", serif;
+            font-size: 60vh; color: #D8CEBC; opacity: 0.15;
+            z-index: 0; pointer-events: none; user-select: none;
+        }
+
+        .content-wrapper {
+            position: relative; z-index: 10;
+            max-width: 700px; margin: 15vh auto 20vh; padding: 0 8vw;
+            animation: fadeUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            opacity: 0; transform: translateY(30px);
+        }
+
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+        .title-area { margin-bottom: 4rem; text-align: center; }
+        
+        .subtitle {
+            font-size: 1rem; letter-spacing: 0.4em; color: var(--cinnabar);
+            text-transform: uppercase; margin-bottom: 1rem; display: block;
+        }
+
+        h1 {
+            font-size: 3.5rem; font-weight: normal; margin: 0; line-height: 1.2;
+            color: var(--text-dark); letter-spacing: 0.05em;
+        }
+
+        .drop-cap::first-letter {
+            float: left; font-size: 5rem; line-height: 0.8;
+            padding-top: 4px; padding-right: 8px; padding-left: 3px;
+            color: var(--cinnabar); font-family: "Baskerville", serif;
+        }
+
+        p {
+            font-size: 1.2rem; line-height: 2; color: #444; margin-bottom: 2.5rem;
+            text-align: justify; 
+        }
+
+        h2 {
+            font-size: 1.4rem; font-weight: normal; letter-spacing: 0.15em;
+            color: var(--text-dark); margin: 3rem 0 1rem 0; text-transform: uppercase;
+            border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 0.5rem;
+        }
+
+        .mountains-bg {
+            position: fixed; bottom: 0; right: 0; width: 60vw; height: 35vh;
+            z-index: 1; pointer-events: none; opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .watermark { font-size: 40vh; right: -15%; top: 40%; }
+            .content-wrapper { margin: 12vh auto 15vh; padding: 0 6vw; }
+            h1 { font-size: 2.5rem; }
+            p { font-size: 1.1rem; text-align: left; }
+            .mountains-bg { width: 100vw; height: 25vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav"><a href="index.html">&lt; Home</a></nav>
+
+    <div class="watermark">易</div>
+
+    <main class="content-wrapper">
+        <div class="title-area">
+            <span class="subtitle">1000 - 750 BC</span>
+            <h1>The Book of<br>Changes</h1>
+        </div>
+
+        <p class="drop-cap">For countless centuries emperor and peasant, scholar and unlearned alike have sought to understand the timeless wisdom and eerie divinations of the I Ching, translated, the Book of Changes. Using the simple tools of three coins, one can seek insight from the I Ching regarding whatever question is on one's heart.</p>
+
+        <h2>The Question</h2>
+        <p>There is a question burning in your heart and mind. Think about it and then write it down, privately, on a piece of paper. Writing the question down helps you to focus on the precise subject being asked about, thereby avoiding ambiguity. Be sure to word your question so that it requires a commentary type of answer ... i.e., do not ask a question that requires a 'yes' or 'no' answer. For example, ask "What if..." or "What is this all about...?"</p>
+
+        <h2>Casting the Coins</h2>
+        <p>With your mind focused on the question you've written down, gather three coins of the same size into your hands, shake them until they are randomly arranged in your hand, then cast them gently upon the table in front of you. Notice how the coins have landed with either 'heads' or 'tails' facing up. Repeating this process 6 times builds a hexagram from bottom to top.</p>
+
+        <h2>Interpreting the Hexagram</h2>
+        <p>The hexagram you have created contains words of insight pertaining to your question. Seek to apply the words you're given to the question you asked, in a sincere and introspective way. Suspend preconceptions that may cloud your vision regarding the subject under consideration. Your intuition will confirm whether or not you have been enlightened. Since the pattern of the falling coins is determined, in part, by the cosmic vibrations emanating from your mind, it is possible for the I Ching to answer the question that is really on your mind and not the one you wrote down, if the two are not the same.</p>
+
+    </main>
+
+    <div class="mountains-bg">
+        <svg viewBox="0 0 800 400" preserveAspectRatio="none" style="width:100%; height:100%;">
+            <path fill="var(--m-2)" d="M100,400 C300,200 500,300 800,100 L800,400 Z"></path>
+            <path fill="var(--m-3)" d="M250,400 C450,250 650,350 800,200 L800,400 Z"></path>
+            <path fill="var(--m-4)" d="M400,400 C600,300 750,400 800,300 L800,400 Z"></path>
+        </svg>
+    </div>
+
+</body>
+</html>

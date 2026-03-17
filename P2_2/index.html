@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - Fluid Narrative with Dot Navigation</title>
+    <style>
+        :root {
+            --bg-paper: #F3EFE6; 
+            --text-dark: #2A2A2A; 
+            --cinnabar: #8A3B36; 
+            --m-1: #788A72; --m-2: #5B6E55; --m-3: #3F523A; --m-4: #243420; 
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0; background-color: var(--bg-paper);
+            color: var(--text-dark); font-family: "Optima", "Baskerville", serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 2000;
+        }
+
+        .top-header {
+            position: fixed; top: 0; width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5vw; box-sizing: border-box; z-index: 1000;
+            background: rgba(243, 239, 230, 0.8); backdrop-filter: blur(10px);
+        }
+        .logo { font-family: "Noto Serif CJK TC", serif; font-size: 1.4rem; color: var(--text-dark); text-decoration: none; letter-spacing: 0.2em; }
+        .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+        .nav-links a { text-decoration: none; color: #666; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; transition: 0.3s; }
+        
+        .nav-links a.cta-btn {
+            background: var(--cinnabar); color: white !important;
+            padding: 8px 22px; border-radius: 2px; font-weight: bold;
+            box-shadow: 0 4px 12px rgba(138, 59, 54, 0.2);
+        }
+
+        .side-dots {
+            position: fixed; left: 4vw; top: 50%; transform: translateY(-50%);
+            z-index: 1500; display: flex; flex-direction: column; gap: 30px; align-items: center;
+        }
+        .dot-track { position: absolute; width: 1px; height: 100%; background: rgba(0,0,0,0.05); z-index: -1; }
+        .dot {
+            width: 8px; height: 8px; border: 1.5px solid #ccc; border-radius: 50%;
+            background: var(--bg-paper); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer; position: relative;
+        }
+        .dot.active {
+            background: var(--cinnabar); border-color: var(--cinnabar); transform: scale(1.6);
+        }
+
+        .dot::after {
+            content: attr(data-label); position: absolute; left: 25px; top: -5px;
+            font-size: 0.7rem; color: var(--cinnabar); opacity: 0; transition: 0.3s;
+            white-space: nowrap; letter-spacing: 0.1em; pointer-events: none;
+        }
+        .dot:hover::after { opacity: 1; transform: translateX(5px); }
+
+        .parallax-mountains {
+            position: fixed; bottom: 0; left: 0; width: 110%; height: 60vh;
+            z-index: 1; pointer-events: none;
+        }
+        .mountain-svg { position: absolute; bottom: -5%; left: 0; width: 100%; height: 100%; transition: transform 0.15s ease-out; }
+
+        section {
+            min-height: 100vh; width: 100%; display: flex; align-items: center;
+            justify-content: center; position: relative;
+        }
+        .section-inner {
+            max-width: 600px; text-align: center; z-index: 20;
+            padding: 4rem;
+        }
+        h2 { font-size: 3.5rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; margin: 0; }
+        p { font-size: 1.15rem; line-height: 2; color: #444; margin: 2rem 0; font-family: "Baskerville", serif; }
+
+        .trigram-deco {
+            display: flex; flex-direction: column; gap: 8px; width: 36px;
+            margin: 0 auto 2.5rem; opacity: 0.5;
+        }
+        .t-line { height: 4px; background: var(--text-dark); width: 100%; }
+        .t-dashed { display: flex; justify-content: space-between; }
+        .t-dashed::before, .t-dashed::after { content: ""; height: 4px; background: var(--text-dark); width: 42%; }
+
+    </style>
+</head>
+<body>
+
+    <div class="side-dots">
+        <div class="dot-track"></div>
+        <div class="dot active" data-label="HOME" onclick="scrollToSection('hero')"></div>
+        <div class="dot" data-label="HISTORY" onclick="scrollToSection('about')"></div>
+        <div class="dot" data-label="PATTERNS" onclick="scrollToSection('hexagrams')"></div>
+        <div class="dot" data-label="ELEMENTS" onclick="scrollToSection('elements')"></div>
+    </div>
+
+    <header class="top-header">
+        <a href="#hero" class="logo" style="font-weight: 300; letter-spacing: 0.3em;">I CHING</a>
+        <nav class="nav-links">
+            <a href="#about">History</a>
+            <a href="#hexagrams">Patterns</a>
+            <a href="#elements">Elements</a>
+            <a href="toss.html" class="cta-btn">Cast Coins</a>
+        </nav>
+    </header>
+
+    <div class="parallax-mountains">
+        <svg id="m1" class="mountain-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" style="opacity: 0.4;">
+            <path fill="var(--m-1)" d="M0,200 Q350,50 800,200 T1440,100 L1440,400 L0,400 Z"></path>
+        </svg>
+        <svg id="m2" class="mountain-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" style="opacity: 0.6;">
+            <path fill="var(--m-2)" d="M0,300 Q450,150 900,350 T1440,250 L1440,400 L0,400 Z"></path>
+        </svg>
+        <svg id="m3" class="mountain-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" style="opacity: 0.8;">
+            <path fill="var(--m-3)" d="M0,350 Q500,200 1000,350 T1440,300 L1440,400 L0,400 Z"></path>
+        </svg>
+        <svg id="m4" class="mountain-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice">
+            <path fill="var(--m-4)" d="M0,400 Q500,250 1100,400 T1440,350 L1440,400 L0,400 Z"></path>
+        </svg>
+    </div>
+
+    <section id="hero">
+        <div class="section-inner">
+            <div style="font-family: 'Noto Serif CJK TC'; font-size: 1.8rem; color: var(--cinnabar); margin-bottom: 1rem; letter-spacing: 0.6em;">易經</div>
+            <h1 style="font-size: 6rem; font-weight: 300; letter-spacing: 0.1em; margin: 0;">CHANGES</h1>
+            <p style="opacity: 0.6; font-style: italic;">The universal architecture of time and flux.</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="section-inner">
+            <div class="trigram-deco"><div class="t-line"></div><div class="t-line"></div><div class="t-line"></div></div>
+            <h2>History</h2>
+            <p>From the ink-brushed bamboo slips to the digital binary, the I Ching has guided seekers for over three millennia.</p>
+            <a href="about.html" style="color:var(--cinnabar); text-decoration:none; font-weight:bold; letter-spacing:0.2em; font-size:0.8rem;">DISCOVER THE ORIGIN →</a>
+        </div>
+    </section>
+
+    <section id="hexagrams">
+        <div class="section-inner">
+            <div class="trigram-deco"><div class="t-line"></div><div class="t-dashed"></div><div class="t-line"></div></div>
+            <h2>Patterns</h2>
+            <p>Sixty-four archetypal states. Each a unique intersection of yin and yang, representing the cycle of human experience.</p>
+            <a href="hexagrams.html" style="color:var(--cinnabar); text-decoration:none; font-weight:bold; letter-spacing:0.2em; font-size:0.8rem;">VIEW THE WHEEL →</a>
+        </div>
+    </section>
+
+    <section id="elements">
+        <div class="section-inner">
+            <div class="trigram-deco"><div class="t-dashed"></div><div class="t-line"></div><div class="t-dashed"></div></div>
+            <h2>Elements</h2>
+            <p>Heaven, Earth, Fire, Water... The eight trigrams form the fundamental grammar of our natural world.</p>
+            <a href="elements.html" style="color:var(--cinnabar); text-decoration:none; font-weight:bold; letter-spacing:0.2em; font-size:0.8rem;">STUDY TRIGRAMS →</a>
+        </div>
+    </section>
+
+    <script>
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const scroll = window.pageYOffset;
+            const sections = document.querySelectorAll("section");
+            const dots = document.querySelectorAll(".dot");
+
+            sections.forEach((s, index) => {
+                const top = s.offsetTop;
+                const height = s.offsetHeight;
+                if (scroll >= top - 300 && scroll < top + height - 300) {
+                    dots.forEach(d => d.classList.remove("active"));
+                    dots[index].classList.add("active");
+                }
+            });
+
+            document.getElementById('m1').style.transform = `translateY(${scroll * 0.06}px) translateX(${scroll * -0.01}px)`;
+            document.getElementById('m2').style.transform = `translateY(${scroll * 0.12}px) translateX(${scroll * 0.01}px)`;
+            document.getElementById('m3').style.transform = `translateY(${scroll * 0.18}px)`;
+            document.getElementById('m4').style.transform = `translateY(${scroll * 0.24}px)`;
+        });
+    </script>
+</body>
+</html>

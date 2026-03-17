@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - Element Details</title>
+    <style>
+        :root {
+            --bg-paper: #F3EFE6; 
+            --text-dark: #2A2A2A; 
+            --accent-color: #8A3B36; 
+            --m-2: #8FA68E; --m-3: #6B836A; --m-4: #475F46; 
+        }
+
+        body {
+            background-color: var(--bg-paper); color: var(--text-dark);
+            font-family: "Optima", "Baskerville", "Georgia", serif;
+            margin: 0; min-height: 100vh; overflow-x: hidden; position: relative;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: -1;
+        }
+
+        .top-nav { 
+            position: relative;
+            width: 90vw;
+            margin: 40px auto 0; 
+            padding-left: 5vw;
+            z-index: 20; 
+        }
+
+        .top-nav a { 
+            text-decoration: none; 
+            color: var(--text-dark); 
+            font-size: 1.2rem; 
+            letter-spacing: 0.1em; 
+            transition: color 0.3s; 
+            display: inline-block;
+        }
+        .top-nav a:hover { color: var(--accent-color); }
+
+        .watermark {
+            position: fixed; top: 50%; left: 0; transform: translateY(-50%);
+            font-family: "Noto Serif CJK TC", "Songti TC", serif;
+            font-size: 70vh; color: var(--accent-color); opacity: 0.08;
+            z-index: 0; pointer-events: none; user-select: none;
+            transition: color 0.8s ease;
+        }
+
+        .main-container {
+            position: relative; 
+            z-index: 10;
+            max-width: 1000px; 
+            margin: 60px auto 10vh;
+            padding: 0 5vw;
+            display: flex; 
+            gap: 4rem; 
+            align-items: flex-start;
+            animation: fadeUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes fadeUp { 
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .hero-symbol {
+            display: flex; flex-direction: column; gap: 15px; width: 180px; flex-shrink: 0;
+            margin-top: 2rem;
+        }
+        .line { height: 24px; width: 100%; background-color: var(--accent-color); border-radius: 2px; transition: background-color 0.8s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .dashed { display: flex; justify-content: space-between; background-color: transparent; box-shadow: none;}
+        .dashed::before, .dashed::after { content: ""; height: 100%; width: 44%; background-color: var(--accent-color); border-radius: 2px; transition: background-color 0.8s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        .info-panel { flex-grow: 1; }
+
+        .title-group { border-bottom: 2px solid var(--accent-color); padding-bottom: 1rem; margin-bottom: 2rem; transition: border-color 0.8s; }
+        .chi-title { font-family: "Noto Serif CJK TC", "Songti TC", serif; font-size: 4.5rem; color: var(--accent-color); margin: 0; line-height: 1; transition: color 0.8s; }
+        .eng-title { font-size: 2.5rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; margin: 0; color: var(--text-dark); }
+        .binary-code { font-family: monospace; font-size: 1.5rem; letter-spacing: 0.5em; color: #777; margin-top: 0.5rem; }
+
+        .data-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        
+        .data-card {
+            background: rgba(255,255,255,0.4); border: 1px solid rgba(0,0,0,0.08);
+            padding: 1.5rem; border-radius: 4px; backdrop-filter: blur(5px);
+        }
+        
+        .data-label { font-size: 0.85rem; letter-spacing: 0.15em; color: #777; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .data-value { font-size: 1.4rem; color: var(--text-dark); margin: 0 0 0.5rem 0; font-weight: normal; }
+        .data-desc { font-size: 0.95rem; color: #555; line-height: 1.5; margin: 0; }
+        .highlight { color: var(--accent-color); font-weight: bold; transition: color 0.8s; }
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; gap: 2rem; margin-top: 10vh; align-items: center;}
+            .hero-symbol { width: 120px; margin-top: 0; }
+            .line { height: 16px; }
+            .chi-title { font-size: 3.5rem; text-align: center; }
+            .eng-title { font-size: 1.8rem; text-align: center; }
+            .binary-code { text-align: center; }
+            .data-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .watermark { left: 50%; transform: translate(-50%, -50%); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav"><a href="elements.html">&lt; Back to 8 Elements</a></nav>
+
+    <div class="watermark" id="bgWatermark"></div>
+
+    <main class="main-container">
+        <div class="hero-symbol" id="heroSymbol"></div>
+
+        <div class="info-panel">
+            <div class="title-group">
+                <h1 class="chi-title" id="chiTitle"></h1>
+                <h2 class="eng-title" id="engTitle"></h2>
+                <div class="binary-code" id="binaryCode"></div>
+            </div>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-label">Spectrum Domain</div>
+                    <h3 class="data-value" id="domainVal"></h3>
+                    <p class="data-desc" id="archetypeVal"></p>
+                </div>
+                <div class="data-card">
+                    <div class="data-label">Immortal Archetype</div>
+                    <h3 class="data-value" id="immortalVal"></h3>
+                    <p class="data-desc" id="traitVal"></p>
+                </div>
+                <div class="data-card">
+                    <div class="data-label">Celestial Circuit</div>
+                    <h3 class="data-value" id="celestialVal"></h3>
+                    <p class="data-desc">Resonates with the cosmic cycle.</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-label">Polarity</div>
+                    <h3 class="data-value highlight" id="polarityVal"></h3>
+                    <p class="data-desc">Fundamental energy state.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const cosmologyData = {
+            "heaven": {
+                chi: "乾", eng: "Heaven", lines: [1,1,1], binary: "111",
+                color: "#5B3A70", // Spectrum: Purple
+                domain: "Mental", archetype: "Holistic",
+                immortal: "Zhang Guo Lao", trait: "Spirit / Creative / Yang",
+                celestial: "Full Moon", polarity: "Absolute Yang"
+            },
+            "lake": {
+                chi: "兌", eng: "Lake", lines: [0,1,1], binary: "110",
+                color: "#2C6B96", // Spectrum: Blue
+                domain: "Mental", archetype: "Integrated",
+                immortal: "Lan Cai He", trait: "Emotion / Desire / Joy",
+                celestial: "Waxing Moon", polarity: "Yang"
+            },
+            "fire": {
+                chi: "離", eng: "Fire", lines: [1,0,1], binary: "101",
+                color: "#E27B32", // Spectrum: Orange
+                domain: "Emotional", archetype: "Emotional",
+                immortal: "Cao Guo Jiu", trait: "Intellect / Conscious / Rational",
+                celestial: "The Sun", polarity: "Yang"
+            },
+            "thunder": {
+                chi: "震", eng: "Thunder", lines: [0,0,1], binary: "100",
+                color: "#D4B12C", // Spectrum: Yellow
+                domain: "Spiritual", archetype: "Achiever", 
+                immortal: "Lu Dong Bin", trait: "Will / Volition / Stimulation",
+                celestial: "New Crescent", polarity: "Yang"
+            },
+            "wind": {
+                chi: "巽", eng: "Wind", lines: [1,1,0], binary: "011",
+                color: "#C11A41", // Spectrum: Red/Pink
+                domain: "Physical", archetype: "Tribal",
+                immortal: "Han Xing Zi", trait: "Sensation / Feeling / Instinct",
+                celestial: "Waning Gibbous", polarity: "Yin"
+            },
+            "water": {
+                chi: "坎", eng: "Water", lines: [0,1,0], binary: "010",
+                color: "#3F9E87", // Spectrum: Teal/Aqua
+                domain: "Spiritual", archetype: "Ecological",
+                immortal: "Li Ti Guai", trait: "Intuition / Subconscious / Irrational",
+                celestial: "The Moon", polarity: "Yin"
+            },
+            "mountain": {
+                chi: "艮", eng: "Mountain", lines: [1,0,0], binary: "001",
+                color: "#5AA83F", // Spectrum: Green
+                domain: "Emotional", archetype: "Rational",
+                immortal: "Zhong Li Quan", trait: "Wisdom / Superconscious",
+                celestial: "Waning Crescent", polarity: "Yin"
+            },
+            "earth": {
+                chi: "坤", eng: "Earth", lines: [0,0,0], binary: "000",
+                color: "#A41865", // Spectrum: Magenta/Plum
+                domain: "Physical", archetype: "Instinctive",
+                immortal: "He Xian Gu", trait: "Great Soul / Receptive / Yin",
+                celestial: "New Moon", polarity: "Absolute Yin"
+            }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const elementId = urlParams.get('id') || 'heaven';
+        const data = cosmologyData[elementId];
+
+        if (data) {
+            document.documentElement.style.setProperty('--accent-color', data.color);
+
+            document.getElementById('bgWatermark').innerText = data.chi;
+            document.getElementById('chiTitle').innerText = data.chi;
+            document.getElementById('engTitle').innerText = data.eng;
+            document.getElementById('binaryCode').innerText = "BIN: " + data.binary;
+            
+            document.getElementById('domainVal').innerText = data.domain;
+            document.getElementById('archetypeVal').innerText = "Archetype: " + data.archetype;
+            
+            document.getElementById('immortalVal').innerText = data.immortal;
+            document.getElementById('traitVal').innerText = data.trait;
+            
+            document.getElementById('celestialVal').innerText = data.celestial;
+            document.getElementById('polarityVal').innerText = data.polarity;
+
+            const symbolContainer = document.getElementById('heroSymbol');
+            const reversedLines = [...data.lines].reverse(); 
+            reversedLines.forEach(isSolid => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = `line ${isSolid ? 'solid' : 'dashed'}`;
+                symbolContainer.appendChild(lineDiv);
+            });
+        }
+    </script>
+</body>
+</html>

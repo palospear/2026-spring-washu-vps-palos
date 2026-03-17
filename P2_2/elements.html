@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - The 8 Elements (Academic View)</title>
+    <style>
+        :root {
+            --bg-paper: #F3EFE6; 
+            --text-dark: #2A2A2A; 
+            --cinnabar: #8A3B36; 
+            --line-soft: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-paper);
+            color: var(--text-dark);
+            font-family: "Optima", "Baskerville", serif;
+            margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; position: relative;
+        }
+
+        body::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: -1;
+        }
+
+        .top-nav { position: absolute; top: 6vh; left: 6vw; z-index: 20; }
+        .top-nav a { text-decoration: none; color: var(--text-dark); font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase; }
+
+        .diagram-container {
+            position: relative;
+            width: 600px; height: 600px;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .diagram-container::before, .diagram-container::after {
+            content: ""; position: absolute;
+            background: repeating-linear-gradient(90deg, var(--line-soft), var(--line-soft) 2px, transparent 2px, transparent 8px);
+            z-index: 0;
+        }
+        .diagram-container::before { width: 500px; height: 1px; transform: rotate(0deg); } /* 离坎线 */
+        .diagram-container::after { width: 500px; height: 1px; transform: rotate(90deg); } /* 乾坤线 */
+
+        .octagon-border {
+            position: absolute; width: 420px; height: 420px;
+            border: 1px solid var(--line-soft);
+            transform: rotate(22.5deg);
+        }
+
+        .center-taiji {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(to left, var(--bg-paper) 50%, var(--text-dark) 50%);
+            border: 2px solid var(--text-dark);
+            position: relative; z-index: 10;
+            box-shadow: 0 0 40px rgba(0,0,0,0.05);
+        }
+        .center-taiji::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 70px; height: 70px; border-radius: 50%; background: var(--text-dark); border: 18px solid var(--bg-paper); box-sizing: border-box; }
+        .center-taiji::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 70px; height: 70px; border-radius: 50%; background: var(--bg-paper); border: 18px solid var(--text-dark); box-sizing: border-box; }
+
+        .node {
+            position: absolute;
+            text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            padding: 15px; border-radius: 4px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 15;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid transparent;
+        }
+
+        .node:hover {
+            background: white;
+            border-color: var(--cinnabar);
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .n-chi { font-family: "Noto Serif CJK TC", serif; font-size: 1.8rem; color: var(--cinnabar); }
+        .n-eng { font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dark); font-weight: bold; }
+
+        .top    { top: 20px; }
+        .bottom { bottom: 20px; }
+        .left   { left: 0px; }
+        .right  { right: 0px; }
+        .tr     { top: 100px; right: 60px; }
+        .tl     { top: 100px; left: 60px; }
+        .br     { bottom: 100px; right: 60px; }
+        .bl     { bottom: 100px; left: 60px; }
+
+        @media (max-width: 768px) {
+            .diagram-container { transform: scale(0.6); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav"><a href="index.html">← INDEX</a></nav>
+
+    <div class="diagram-container">
+        <div class="octagon-border"></div>
+        <div class="center-taiji"></div>
+
+        <a href="element.html?id=heaven" class="node top">
+            <span class="n-chi">乾</span><span class="n-eng">Heaven</span>
+        </a>
+
+        <a href="element.html?id=earth" class="node bottom">
+            <span class="n-chi">坤</span><span class="n-eng">Earth</span>
+        </a>
+
+        <a href="element.html?id=fire" class="node left">
+            <span class="n-chi">離</span><span class="n-eng">Fire</span>
+        </a>
+
+        <a href="element.html?id=water" class="node right">
+            <span class="n-chi">坎</span><span class="n-eng">Water</span>
+        </a>
+
+        <a href="element.html?id=wind" class="node tr">
+            <span class="n-chi">巽</span><span class="n-eng">Wind</span>
+        </a>
+        <a href="element.html?id=mountain" class="node tl">
+            <span class="n-chi">艮</span><span class="n-eng">Mountain</span>
+        </a>
+        <a href="element.html?id=thunder" class="node br">
+            <span class="n-chi">震</span><span class="n-eng">Thunder</span>
+        </a>
+        <a href="element.html?id=lake" class="node bl">
+            <span class="n-chi">兌</span><span class="n-eng">Lake</span>
+        </a>
+    </div>
+
+</body>
+</html>

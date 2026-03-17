@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - Zen Divination Flow</title>
+    <style>
+        :root {
+            --bg-paper: #F3EFE6; 
+            --text-dark: #2A2A2A; 
+            --cinnabar: #8A3B36; 
+            --coin-gold: #C6A254; 
+            --coin-rim: #9C7830;  
+            --m-4: #243420; 
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0; background-color: var(--bg-paper);
+            color: var(--text-dark); font-family: "Optima", "Baskerville", serif;
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 2000;
+        }
+
+        .top-header {
+            position: fixed; top: 0; width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 6vw; box-sizing: border-box; z-index: 1000;
+            background: rgba(243, 239, 230, 0.7); backdrop-filter: blur(12px);
+        }
+        .logo { font-family: "Noto Serif CJK TC", serif; font-size: 1.5rem; color: var(--text-dark); text-decoration: none; letter-spacing: 0.3em; }
+        .nav-links { display: flex; align-items: center; gap: 3rem; }
+        .nav-links a { text-decoration: none; color: #777; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a.cta-red { color: var(--cinnabar) !important; font-weight: bold; border: 1px solid rgba(138, 59, 54, 0.3); padding: 6px 15px; border-radius: 1px; }
+
+        .side-steps {
+            position: fixed; left: 4vw; top: 50%; transform: translateY(-50%);
+            z-index: 1500; display: flex; flex-direction: column; gap: 20px;
+        }
+        .step-dot { width: 6px; height: 6px; border: 1px solid #999; border-radius: 50%; transition: 0.4s; }
+        .step-dot.active { background: var(--cinnabar); border-color: var(--cinnabar); transform: scale(1.8); }
+
+        .stage {
+            position: relative; z-index: 10; width: 100%; max-width: 800px;
+            margin-top: 15vh; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .hexagram-visual {
+            display: flex; flex-direction: column-reverse; gap: 10px;
+            height: 140px; margin-bottom: 3rem;
+        }
+
+        .line-wrapper { display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease; }
+        .line-shape { height: 10px; width: 120px; background: var(--text-dark); border-radius: 1px; }
+        .line-shape.dashed { display: flex; justify-content: space-between; background: transparent; }
+        .line-shape.dashed::before, .line-shape.dashed::after { content: ""; height: 100%; width: 44%; background: var(--text-dark); }
+        .change-mark { color: var(--cinnabar); font-weight: bold; width: 10px; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .coins-interaction { display: flex; gap: 2.5rem; margin-bottom: 2rem; perspective: 1000px; }
+        .coin-box { width: 80px; height: 80px; position: relative; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .face { 
+            position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle, #D8B96D 0%, var(--coin-gold) 70%, var(--coin-rim) 100%);
+            border: 1px solid var(--coin-rim);
+        }
+        .back { transform: rotateX(180deg); background: radial-gradient(circle, #C29B4A 0%, #A37E33 100%); }
+        .hole { width: 30px; height: 30px; border: 1px solid rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: rgba(0,0,0,0.5); }
+
+        .toss-btn {
+            background: transparent; border: 1px solid var(--text-dark); padding: 12px 40px;
+            letter-spacing: 0.3em; cursor: pointer; transition: 0.3s; font-family: "Optima", serif;
+        }
+        .toss-btn:hover { background: var(--text-dark); color: white; }
+        .toss-btn:disabled { opacity: 0.3; }
+
+        .result-overlay {
+            max-width: 600px; text-align: center; margin-top: 4rem; opacity: 0; transform: translateY(20px);
+            transition: 1s; padding-bottom: 10vh;
+        }
+        .result-overlay.show { opacity: 1; transform: translateY(0); }
+
+        .bottom-landscape {
+            position: fixed; bottom: 0; width: 100%; height: 35vh;
+            z-index: 1; pointer-events: none; opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <a href="index.html" class="logo">I CHING</a>
+        <nav class="nav-links">
+            <a href="index.html#about">History</a>
+            <a href="hexagrams.html">Patterns</a>
+            <a href="elements.html">Elements</a>
+            <a href="toss.html" class="cta-red">Cast Coins</a>
+        </nav>
+    </header>
+
+    <div class="side-steps" id="sideSteps">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+    </div>
+
+    <main class="stage">
+        <div class="hexagram-visual" id="visualBuilder"></div>
+
+        <div class="coins-interaction">
+            <div class="coin-box" id="c1"><div class="face front"><div class="hole">陽</div></div><div class="face back"><div class="hole">陰</div></div></div>
+            <div class="coin-box" id="c2"><div class="face front"><div class="hole">陽</div></div><div class="face back"><div class="hole">陰</div></div></div>
+            <div class="coin-box" id="c3"><div class="face front"><div class="hole">陽</div></div><div class="face back"><div class="hole">陰</div></div></div>
+        </div>
+
+        <div id="status" style="letter-spacing: 0.4em; font-size: 0.8rem; margin-bottom: 2rem; color: #999;">CAST 1 OF 6</div>
+        <button class="toss-btn" id="tossBtn" onclick="handleToss()">TOSS COINS</button>
+
+        <div class="result-overlay" id="resultArea">
+            <div style="font-size: 0.8rem; letter-spacing: 0.3em; color: var(--cinnabar); margin-bottom: 1rem;">THE ORACLE SPEAKS</div>
+            <h2 id="resTitle" style="font-weight: 300; margin-bottom: 1.5rem;"></h2>
+            <p id="resDesc" style="font-family: 'Baskerville', serif; font-size: 1.2rem; line-height: 1.8;"></p>
+            <button class="ui-btn" onclick="location.reload()" style="background:none; border:none; border-bottom:1px solid #999; cursor:pointer; letter-spacing:0.2em; font-size:0.7rem; color:#999; padding-bottom:5px;">START NEW DIVINATION</button>
+        </div>
+    </main>
+
+    <div class="bottom-landscape">
+        <svg viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" style="width:100%; height:100%;">
+            <path fill="var(--m-4)" d="M0,400 Q400,150 800,350 T1440,250 L1440,400 L0,400 Z"></path>
+        </svg>
+    </div>
+
+    <script>
+        let count = 0;
+        let lines = [];
+        let angles = [0,0,0];
+
+        function handleToss() {
+            if(count >= 6) return;
+            const btn = document.getElementById('tossBtn');
+            btn.disabled = true;
+
+            for(let i=1; i<=3; i++) {
+                const isHeads = Math.random() > 0.5;
+                angles[i-1] += (isHeads ? 1800 : 1980);
+                document.getElementById('c'+i).style.transform = `rotateX(${angles[i-1]}deg)`;
+            }
+
+            setTimeout(() => {
+                const isYang = Math.random() > 0.5;
+                lines.push(isYang);
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'line-wrapper';
+                wrapper.innerHTML = `<div class="line-shape ${isYang?'':'dashed'}"></div><div class="change-mark"></div>`;
+                document.getElementById('visualBuilder').appendChild(wrapper);
+
+                count++;
+                if(count < 6) {
+                    btn.disabled = false;
+                    document.getElementById('status').innerText = `CAST ${count+1} OF 6`;
+                    document.querySelectorAll('.step-dot')[count].classList.add('active');
+                } else {
+                    btn.style.display = 'none';
+                    document.getElementById('status').style.display = 'none';
+                    showFinal();
+                }
+            }, 1200);
+        }
+
+        function showFinal() {
+            document.getElementById('resultArea').classList.add('show');
+            document.getElementById('resTitle').innerText = "Hexagram 11: Prosperity";
+            document.getElementById('resDesc').innerText = "The strength of Heaven mingles with the receptive earth. This is a time of great harmony and progress. Move forward with confidence.";
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

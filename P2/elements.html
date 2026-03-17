@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - The 8 Basic Elements</title>
+    <style>
+        :root {
+            --bg-paper: #EFE9DE; 
+            --text-dark: #2C2C2C; 
+            --cinnabar: #A32B26; 
+            --line-color: rgba(44, 44, 44, 0.15); 
+        }
+
+        body {
+            background-color: var(--bg-paper);
+            color: var(--text-dark);
+            font-family: "Optima", "Baskerville", "Georgia", serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 6vh;
+            left: 6vw;
+            z-index: 10;
+        }
+
+        .top-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .top-nav a:hover {
+            color: var(--cinnabar);
+            border-bottom: 1px solid var(--cinnabar);
+        }
+
+        .page-title {
+            position: absolute;
+            top: 6vh;
+            right: 6vw;
+            font-size: 1.1rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #777;
+        }
+
+        .compass-wrapper {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .yin-yang-wrapper {
+            opacity: 0;
+            animation: taijiBirth 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes taijiBirth {
+            0% { opacity: 0; transform: scale(0.3) rotate(-90deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .yin-yang {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(to left, var(--bg-paper) 50%, var(--text-dark) 50%);
+            border: 2px solid var(--text-dark);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            animation: slowRotate 30s linear infinite; 
+        }
+
+        .yin-yang::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--text-dark); border: 16px solid var(--bg-paper);
+            box-sizing: border-box;
+        }
+
+        .yin-yang::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--bg-paper); border: 16px solid var(--text-dark);
+            box-sizing: border-box;
+        }
+
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .bg-octagon {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border: 1px solid var(--line-color);
+            z-index: -1;
+            opacity: 0;
+            animation: drawArray 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
+        }
+        .bg-octagon::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: 1px solid var(--line-color);
+            transform: rotate(45deg);
+        }
+
+        @keyframes drawArray {
+            0% { opacity: 0; transform: rotate(0deg) scale(0.5); }
+            100% { opacity: 1; transform: rotate(22.5deg) scale(1); }
+        }
+
+        .element {
+            position: absolute;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            animation: revealElement 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        @keyframes revealElement {
+            0% { opacity: 0; filter: blur(8px); transform: translateY(15px); }
+            100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+        }
+
+        .element:hover { transform: translateY(-5px) scale(1.05); }
+        .element:hover .e-eng { color: var(--cinnabar); }
+
+        .e-eng {
+            font-size: 1rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            transition: color 0.3s ease;
+        }
+
+        .e-chi {
+            font-family: "Noto Serif CJK TC", "Songti TC", "PMingLiU", serif;
+            font-size: 1.5rem;
+            color: var(--cinnabar); 
+            opacity: 0.8;
+        }
+
+        .pos-n  { top: -40px;            animation-delay: 1.0s; } 
+        .pos-ne { top: 40px; right: -20px; animation-delay: 1.2s; } 
+        .pos-e  { right: -80px;          animation-delay: 1.4s; } 
+        .pos-se { bottom: 40px; right: -20px; animation-delay: 1.6s;} 
+        .pos-s  { bottom: -40px;         animation-delay: 1.8s; } 
+        .pos-sw { bottom: 40px; left: -20px;  animation-delay: 2.0s; } 
+        .pos-w  { left: -80px;           animation-delay: 2.2s; } 
+        .pos-nw { top: 40px; left: -20px;   animation-delay: 2.4s; } 
+
+        @media (max-width: 768px) {
+            .top-nav { top: 4vh; left: 5vw; }
+            .page-title { display: none; } 
+            .compass-wrapper { transform: scale(0.65); } 
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <a href="index.html">← Back to Index</a>
+    </nav>
+
+    <div class="page-title">The 8 Basic Elements</div>
+
+    <div class="compass-wrapper">
+        <div class="bg-octagon"></div>
+
+        <div class="yin-yang-wrapper">
+            <div class="yin-yang"></div>
+        </div>
+
+        <a href="element.html?id=heaven" class="element pos-n">
+            <span class="e-chi">乾</span><span class="e-eng">Heaven</span>
+        </a>
+        <a href="element.html?id=wind" class="element pos-ne">
+            <span class="e-chi">巽</span><span class="e-eng">Wind</span>
+        </a>
+        <a href="element.html?id=water" class="element pos-e">
+            <span class="e-chi">坎</span><span class="e-eng">Water</span>
+        </a>
+        <a href="element.html?id=thunder" class="element pos-se">
+            <span class="e-chi">震</span><span class="e-eng">Thunder</span>
+        </a>
+        <a href="element.html?id=earth" class="element pos-s">
+            <span class="e-eng">Earth</span><span class="e-chi">坤</span>
+        </a>
+        <a href="element.html?id=lake" class="element pos-sw">
+            <span class="e-eng">Lake</span><span class="e-chi">兌</span>
+        </a>
+        <a href="element.html?id=fire" class="element pos-w">
+            <span class="e-eng">Fire</span><span class="e-chi">離</span>
+        </a>
+        <a href="element.html?id=mountain" class="element pos-nw">
+            <span class="e-chi">艮</span><span class="e-eng">Mountain</span>
+        </a>
+    </div>
+
+</body>
+</html>

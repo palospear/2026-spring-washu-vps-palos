@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching - Fluid Narrative Flow</title>
+    <style>
+        :root {
+            --bg-paper: #F3EFE6; 
+            --text-dark: #2A2A2A; 
+            --cinnabar: #8A3B36; 
+            --m-1: #788A72; --m-2: #5B6E55; --m-3: #3F523A; --m-4: #243420; 
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0; background-color: var(--bg-paper);
+            color: var(--text-dark); font-family: "Optima", "Baskerville", serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 2000;
+        }
+
+        .top-header {
+            position: fixed; top: 0; width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5vw; box-sizing: border-box; z-index: 1000;
+            background: rgba(243, 239, 230, 0.8); backdrop-filter: blur(10px);
+        }
+        .logo { font-family: "Noto Serif CJK TC", serif; font-size: 1.4rem; color: var(--text-dark); text-decoration: none; letter-spacing: 0.2em; }
+        .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+        .nav-links a { text-decoration: none; color: #666; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; transition: 0.3s; }
+        
+        .nav-links a.cta-btn {
+            background: var(--cinnabar); color: white !important;
+            padding: 8px 20px; border-radius: 2px; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(138, 59, 54, 0.2);
+        }
+        .nav-links a:hover:not(.cta-btn) { color: var(--cinnabar); }
+
+        .side-progress-bar {
+            position: fixed; left: 4vw; top: 25%; height: 50vh; width: 1px;
+            background: rgba(0,0,0,0.05); z-index: 1500;
+        }
+        .progress-fill {
+            position: absolute; top: 0; left: -1px; width: 3px; background: var(--cinnabar);
+            height: 0; transition: height 0.1s;
+        }
+
+        .parallax-mountains {
+            position: fixed; bottom: 0; left: 0; width: 110%; height: 60vh;
+            z-index: 1; pointer-events: none;
+        }
+        .mountain-svg { position: absolute; bottom: -5%; left: 0; width: 100%; height: 100%; transition: transform 0.1s ease-out; }
+
+        section {
+            min-height: 100vh; width: 100%; display: flex; align-items: center;
+            justify-content: center; position: relative; padding: 15vh 0;
+        }
+        .section-inner {
+            max-width: 600px; text-align: center; z-index: 20;
+            background: rgba(243, 239, 230, 0.6); backdrop-filter: blur(5px);
+            padding: 3rem; border-radius: 8px;
+        }
+        h2 { font-size: 3.5rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; margin: 0; color: var(--text-dark); }
+        p { font-size: 1.15rem; line-height: 2; color: #333; margin: 2rem 0; font-family: "Baskerville", serif; }
+
+        .trigram-deco {
+            display: flex; flex-direction: column; gap: 8px; width: 40px;
+            margin: 0 auto 2rem; opacity: 0.4;
+        }
+        .t-line { height: 4px; background: var(--text-dark); width: 100%; border-radius: 1px; }
+        .t-dashed { display: flex; justify-content: space-between; }
+        .t-dashed::before, .t-dashed::after { content: ""; height: 4px; background: var(--text-dark); width: 42%; border-radius: 1px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="side-progress-bar">
+        <div class="progress-fill" id="pFill"></div>
+    </div>
+
+    <header class="top-header">
+        <a href="#hero" class="logo">I CHING</a>
+        <nav class="nav-links">
+            <a href="#about">History</a>
+            <a href="#hexagrams">Patterns</a>
+            <a href="#elements">Elements</a>
+            <a href="toss.html" class="cta-btn">Cast Coins</a>
+        </nav>
+    </header>
+
+    <div class="parallax-mountains">
+        <svg id="m1" class="mountain-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" style="opacity: 0.4;">
+            <path fill="var(--m-1)" d="M0,200 Q350,50 800,200 T1440,100 L1440,400 L0,400 Z"></path>
+        </svg>
+        <svg id="m2" class="mountain-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" style="opacity: 0.6;">
+            <path fill="var(--m-2)" d="M0,300 Q450,150 900,350 T1440,250 L1440,400 L0,400 Z"></path>
+        </svg>
+        <svg id="m3" class="mountain-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" style="opacity: 0.8;">
+            <path fill="var(--m-3)" d="M0,350 Q500,200 1000,350 T1440,300 L1440,400 L0,400 Z"></path>
+        </svg>
+        <svg id="m4" class="mountain-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice">
+            <path fill="var(--m-4)" d="M0,400 Q500,250 1100,400 T1440,350 L1440,400 L0,400 Z"></path>
+        </svg>
+    </div>
+
+    <section id="hero">
+        <div class="section-inner" style="background:transparent; backdrop-filter:none;">
+            <div style="font-family: 'Noto Serif CJK TC'; font-size: 2rem; color: var(--cinnabar); margin-bottom: 1rem; letter-spacing: 0.5em;">易經</div>
+            <h1 style="font-size: 6.5rem; font-weight: 300; letter-spacing: 0.15em; margin: 0;">CHANGES</h1>
+            <p>Decoding the universal binary since 1000 BC.</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="section-inner">
+            <div class="trigram-deco"><div class="t-line"></div><div class="t-line"></div><div class="t-line"></div></div>
+            <h2>The History</h2>
+            <p>A narrative journey through three millennia. The I Ching is a dynamic system reflecting the architecture of the cosmos.</p>
+            <a href="about.html" style="color:var(--cinnabar); text-decoration:none; font-weight:bold; letter-spacing:0.1em;">LEARN MORE →</a>
+        </div>
+    </section>
+
+    <section id="hexagrams">
+        <div class="section-inner">
+            <div class="trigram-deco"><div class="t-line"></div><div class="t-dashed"></div><div class="t-line"></div></div>
+            <h2>64 Patterns</h2>
+            <p>Sixty-four archetypal states of being. Explore the wheel of shifts and transitions that govern our reality.</p>
+            <a href="hexagrams.html" style="color:var(--cinnabar); text-decoration:none; font-weight:bold; letter-spacing:0.1em;">VIEW WHEEL →</a>
+        </div>
+    </section>
+
+    <section id="elements">
+        <div class="section-inner">
+            <div class="trigram-deco"><div class="t-dashed"></div><div class="t-line"></div><div class="t-dashed"></div></div>
+            <h2>8 Elements</h2>
+            <p>From the creative power of Heaven to the receptive Earth. The trigrams form the foundation of existence.</p>
+            <a href="elements.html" style="color:var(--cinnabar); text-decoration:none; font-weight:bold; letter-spacing:0.1em;">EXPLORE ELEMENTS →</a>
+        </div>
+    </section>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const scroll = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scroll / docHeight) * 100;
+
+            document.getElementById('pFill').style.height = scrollPercent + "%";
+
+            document.getElementById('m1').style.transform = `translateY(${scroll * 0.05}px) translateX(${scroll * -0.02}px)`;
+            document.getElementById('m2').style.transform = `translateY(${scroll * 0.1}px) translateX(${scroll * 0.02}px)`;
+            document.getElementById('m3').style.transform = `translateY(${scroll * 0.15}px) translateX(${scroll * -0.03}px)`;
+            document.getElementById('m4').style.transform = `translateY(${scroll * 0.2}px)`;
+        });
+    </script>
+</body>
+</html>
