@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I Ching - The Grand Oracle Engine</title>
+    <title>I Ching - Toss Coins</title>
     <style>
         :root {
             --bg-paper: #F2EFE8; 
@@ -11,7 +11,6 @@
             --cinnabar: #8A3B36; 
             --ink-mist: rgba(36, 52, 32, 0.08);
             --line-faded: rgba(26, 26, 26, 0.15);
-            /* 主页的山脉色彩变量 */
             --m-1: #788A72; --m-2: #5B6E55; --m-3: #3F523A; --m-4: #243420; 
         }
 
@@ -20,7 +19,6 @@
             background-color: var(--bg-paper); font-family: "Optima", "Cinzel", serif;
         }
 
-        /* 噪点滤镜 */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
@@ -55,7 +53,6 @@
             transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1); transform: scale(1.2); pointer-events: none;
             z-index: 10; 
         }
-        /* 💡 彻底解决遮挡：进一步缩小卦象，并将其推得更高 */
         .background-hex.focused { transform: scale(0.7) translateY(-32vh); } 
 
         .bg-line { height: 2.5vh; width: 45vw; background: var(--line-faded); border-radius: 2px; position: relative; transition: background 1s; }
@@ -94,7 +91,6 @@
         .reveal-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 30; display: none; flex-direction: column; align-items: center;
-            /* 💡 彻底解决遮挡：增加 top padding，让文字卡片被推得更靠下 */
             overflow-y: auto; padding: 48vh 20px 10vh; box-sizing: border-box;
         }
         
