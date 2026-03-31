@@ -3,471 +3,395 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I Ching - Toss Coins</title>
+    <title>I Ching - The Grand Oracle Engine</title>
     <style>
         :root {
-            --bg-paper: #F3EFE6; 
-            --text-dark: #2A2A2A; 
-            --coin-gold: #C6A254; 
-            --coin-rim: #9C7830;  
-            --coin-hole: #5E461A; 
-            --line-color: #2D2D2D; 
+            --bg-paper: #F2EFE8; 
+            --text-dark: #1A1A1A; 
+            --cinnabar: #8A3B36; 
+            --ink-mist: rgba(36, 52, 32, 0.08);
+            --line-faded: rgba(26, 26, 26, 0.15);
+            /* 主页的山脉色彩变量 */
+            --m-1: #788A72; --m-2: #5B6E55; --m-3: #3F523A; --m-4: #243420; 
         }
 
-        body {
-            background-color: var(--bg-paper); color: var(--text-dark);
-            font-family: "Optima", "Baskerville", "Georgia", serif;
-            margin: 0; min-height: 100vh; overflow-x: hidden;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        html, body {
+            margin: 0; padding: 0; height: 100vh; overflow: hidden;
+            background-color: var(--bg-paper); font-family: "Optima", "Cinzel", serif;
         }
 
+        /* 噪点滤镜 */
         body::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: -1;
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 1000;
         }
 
-        .top-nav { position: absolute; top: 5vh; left: 5vw; z-index: 20; width: 100%; }
-        .top-nav a { text-decoration: none; color: var(--text-dark); font-size: 1.2rem; letter-spacing: 0.1em; }
-
-        .toss-container {
-            display: flex; flex-direction: column; align-items: center;
-            gap: 2.5rem; z-index: 10; margin-top: 8vh; 
+        header {
+            position: fixed; top: 0; width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 6vw; box-sizing: border-box; z-index: 1100;
         }
+        .logo { font-family: "Noto Serif CJK TC", serif; font-size: 1.4rem; color: var(--text-dark); text-decoration: none; letter-spacing: 0.3em; }
+        
+        .nav-links a { text-decoration: none; color: #888; font-size: 0.75rem; letter-spacing: 0.2em; margin-left: 3rem; text-transform: uppercase; transition: 0.3s; white-space: nowrap; }
+        .nav-links a.active-red { color: var(--cinnabar) !important; border: 1px solid rgba(138, 59, 54, 0.2); padding: 5px 15px; }
 
-        .hexagram-builder {
-            display: flex; flex-direction: column-reverse; align-items: center;
-            gap: 12px; height: 170px; justify-content: flex-start;
+        .progress-ruler {
+            position: fixed; left: 4vw; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 30px; z-index: 1000;
+            transition: 0.8s opacity;
         }
+        .step-node { width: 5px; height: 5px; border: 1px solid #AAA; border-radius: 50%; transition: 0.4s; }
+        .step-node.active { background: var(--cinnabar); border-color: var(--cinnabar); transform: scale(1.6); }
 
-        .line-wrapper {
-            display: flex; align-items: center; gap: 15px; width: 150px;
-            opacity: 0; transform: translateY(10px);
-            animation: popIn 0.4s ease forwards; 
-        }
-
-        .line {
-            height: 16px; width: 120px; border-radius: 2px;
-            background-color: var(--line-color); flex-shrink: 0;
-        }
-
-        .dashed { display: flex; justify-content: space-between; background-color: transparent; }
-        .dashed::before, .dashed::after { content: ""; height: 100%; width: 42%; background-color: var(--line-color); border-radius: 2px; }
-
-        .line-dot {
-            font-size: 28px; line-height: 16px; color: var(--text-dark);
-            width: 15px; text-align: left; font-weight: bold;
-        }
-
-        @keyframes popIn { to { opacity: 1; transform: translateY(0); } }
-
-        .coins-row {
-            display: flex; gap: 2.5rem; justify-content: center;
-            perspective: 1200px; margin-bottom: 1rem;
-        }
-
-        .coin-wrapper {
-            position: relative; width: 90px; height: 90px;
-            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
-        }
-
-        .coin-wrapper.tossing {
-            transform: translateY(-40px) scale(1.15); 
-            filter: drop-shadow(0 30px 15px rgba(0,0,0,0.15)); 
-        }
-
-        .coin {
-            width: 100%; height: 100%; position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); 
-        }
-
-        .coin-face {
-            position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            backface-visibility: hidden;
+        .canvas-area {
+            position: relative; width: 100%; height: 100vh;
             display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle, #D8B96D 0%, var(--coin-gold) 70%, var(--coin-rim) 100%);
-            border: 2px solid var(--coin-rim); box-sizing: border-box;
         }
 
-        .coin-back { transform: rotateX(180deg); background: radial-gradient(circle, #C29B4A 0%, #A37E33 100%); }
-
-        .square-hole {
-            width: 36px; height: 36px; background-color: var(--bg-paper);
-            border: 2px solid var(--coin-hole); box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+        .background-hex {
+            position: absolute; display: flex; flex-direction: column-reverse; gap: 2.5vh;
+            transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1); transform: scale(1.2); pointer-events: none;
+            z-index: 10; 
         }
+        /* 💡 彻底解决遮挡：进一步缩小卦象，并将其推得更高 */
+        .background-hex.focused { transform: scale(0.7) translateY(-32vh); } 
 
-        .mini-symbol { width: 16px; height: 3px; display: flex; justify-content: space-between; }
-        .mini-solid { width: 100%; height: 100%; background-color: var(--coin-hole); }
-        .mini-dashed-part { width: 40%; height: 100%; background-color: var(--coin-hole); }
-        .coin-text { font-family: "Noto Serif CJK TC", "Songti TC", serif; font-size: 0.85rem; color: var(--coin-hole); font-weight: bold; line-height: 1; }
-
-        .status-text { font-size: 1rem; letter-spacing: 0.3em; color: #666; text-transform: uppercase; }
-
-        .toss-btn {
-            padding: 1rem 4rem; margin-top: 1rem;
-            font-size: 1.1rem; letter-spacing: 0.25em; text-transform: uppercase;
-            background-color: transparent; color: var(--text-dark);
-            border: 1px solid var(--text-dark); border-radius: 4px;
-            cursor: pointer; transition: all 0.3s ease; font-family: "Optima", serif;
-        }
-
-        .toss-btn:hover { background-color: var(--text-dark); color: var(--bg-paper); }
-        .toss-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-        .result-area {
-            display: flex; flex-direction: column; align-items: center; text-align: left; /* 左对齐方便长文本阅读 */
-            max-width: 700px; margin-top: 1rem;
-            opacity: 0; transform: translateY(20px); pointer-events: none;
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-            max-height: 40vh; overflow-y: auto; padding: 0 20px; 
-        }
-
-        .result-area.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .bg-line { height: 2.5vh; width: 45vw; background: var(--line-faded); border-radius: 2px; position: relative; transition: background 1s; }
+        .bg-line.dashed { background: transparent; }
+        .bg-line.dashed::before, .bg-line.dashed::after { content: ""; position: absolute; height: 100%; width: 45%; background: var(--line-faded); transition: background 1s; }
+        .bg-line.dashed::after { right: 0; }
         
-        .hex-label { font-size: 0.9rem; letter-spacing: 0.2em; color: #777; text-transform: uppercase; margin-bottom: 0.5rem; text-align: center; width: 100%;}
-        .result-title { font-size: 1.6rem; font-weight: normal; margin: 0 0 0.5rem 0; line-height: 1.4; color: #8A3B36; text-align: center;}
-        .result-desc { font-size: 1.1rem; line-height: 1.6; color: #555; margin: 0 0 1.5rem 0; }
-        .future-block { border-top: 1px solid rgba(0,0,0,0.15); padding-top: 1.5rem; display: none; margin-top: 1rem; }
-        
-        .restart-btn { text-decoration: underline; cursor: pointer; color: var(--text-dark); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1rem; text-align: center; width: 100%;}
+        .background-hex.focused .bg-line { background: rgba(26, 26, 26, 0.25); }
+        .background-hex.focused .bg-line.dashed { background: transparent; }
+        .background-hex.focused .bg-line.dashed::before, .background-hex.focused .bg-line.dashed::after { background: rgba(26, 26, 26, 0.25); }
 
-        @media (max-width: 768px) {
-            .toss-container { gap: 1.5rem; margin-top: 5vh; } .coins-row { gap: 1rem; }
-            .coin-wrapper { width: 70px; height: 70px; } .square-hole { width: 26px; height: 26px; }
-            .coin-text { font-size: 0.75rem; } .result-area { padding: 0 1.5rem; }
-            .result-title { font-size: 1.3rem; } .result-desc { font-size: 1rem; }
+        @keyframes dotPop {
+            0% { transform: translateY(-50%) scale(0); opacity: 0; }
+            80% { transform: translateY(-50%) scale(1.4); opacity: 1; }
+            100% { transform: translateY(-50%) scale(1); opacity: 0.9; }
         }
+        .dot-mark { 
+            position: absolute; right: -60px; top: 50%; 
+            font-size: 3rem; color: var(--cinnabar); 
+            animation: dotPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .interaction-overlay { position: relative; z-index: 20; text-align: center; transition: 0.8s opacity; }
+        .coin-group { display: flex; gap: 4rem; margin-bottom: 4rem; perspective: 1200px; }
+        .void-coin { width: 85px; height: 85px; position: relative; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .c-side { position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden; border: 1px solid rgba(0,0,0,0.1); background: rgba(255,255,255,0.4); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #777; }
+        .c-back { transform: rotateY(180deg); color: var(--cinnabar); border-color: rgba(138, 59, 54, 0.3); }
+
+        .button-group { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
+        .ritual-btn { background: none; border: none; font-size: 0.85rem; letter-spacing: 0.5em; color: var(--text-dark); cursor: pointer; border-bottom: 1px solid #CCC; padding: 10px 20px; text-transform: uppercase; transition: 0.4s; }
+        .ritual-btn:hover { color: var(--cinnabar); border-color: var(--cinnabar); letter-spacing: 0.7em; }
+        .ritual-btn.quick { color: #888; font-size: 0.75rem; letter-spacing: 0.3em; border-color: transparent; opacity: 0.6; }
+        .ritual-btn.quick:hover { opacity: 1; color: var(--text-dark); border-color: var(--text-dark); letter-spacing: 0.4em; }
+        .ritual-btn:disabled { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
+
+        .reveal-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 30; display: none; flex-direction: column; align-items: center;
+            /* 💡 彻底解决遮挡：增加 top padding，让文字卡片被推得更靠下 */
+            overflow-y: auto; padding: 48vh 20px 10vh; box-sizing: border-box;
+        }
+        
+        .reveal-block {
+            max-width: 650px; text-align: center; margin-bottom: 2.5rem;
+            background: rgba(242, 239, 232, 0.65); 
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem 3rem; border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03), inset 0 0 0 1px rgba(255,255,255,0.3);
+            opacity: 0; transform: translateY(30px); transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal-block.active { opacity: 1; transform: translateY(0); }
+
+        .reveal-block h3 { font-size: 0.8rem; letter-spacing: 0.4em; color: #888; text-transform: uppercase; margin: 0 0 1rem; }
+        .reveal-block h2 { font-size: 2.8rem; font-weight: 300; color: var(--cinnabar); margin: 0 0 1.5rem; line-height: 1.3; text-shadow: 0 2px 10px rgba(255,255,255,0.8); }
+        .reveal-block p { font-family: "Baskerville", serif; font-size: 1.15rem; line-height: 1.8; color: #444; margin: 0; }
+
+        .reset-btn { display: inline-block; margin-top: 1rem; color: #999; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.2em; border-bottom: 1px solid #DDD; padding-bottom: 5px; transition: 0.3s; }
+        .reset-btn:hover { color: var(--text-dark); border-color: var(--text-dark); }
+
+        .echo-mountains {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 35vh;
+            z-index: 1; pointer-events: none; opacity: 0.7; 
+        }
+        .echo-mountains svg {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        .mist-layer { position: fixed; bottom: -5%; width: 120%; height: 40vh; background: radial-gradient(ellipse at center, var(--ink-mist) 0%, transparent 70%); filter: blur(40px); pointer-events: none; z-index: 2; }
     </style>
 </head>
 <body>
 
-    <nav class="top-nav"><a href="index.html">&lt; Home</a></nav>
+    <header>
+        <a href="index.html" class="logo">I CHING</a>
+        <nav class="nav-links">
+            <a href="index.html#about">History</a>
+            <a href="hexagrams.html">Patterns</a>
+            <a href="elements.html">Elements</a>
+            <a href="toss.html" class="active-red">Cast Coins</a>
+        </nav>
+    </header>
 
-    <div class="toss-container">
-        <div class="hexagram-builder" id="hexagramBuilder"></div>
-
-        <div class="coins-row">
-            <div class="coin-wrapper" id="wrap1">
-                <div class="coin" id="coin1">
-                    <div class="coin-face coin-front"><div class="square-hole"><div class="mini-symbol"><div class="mini-solid"></div></div><span class="coin-text">陽</span></div></div>
-                    <div class="coin-face coin-back"><div class="square-hole"><div class="mini-symbol"><div class="mini-dashed-part"></div><div class="mini-dashed-part"></div></div><span class="coin-text">陰</span></div></div>
-                </div>
-            </div>
-            <div class="coin-wrapper" id="wrap2">
-                <div class="coin" id="coin2">
-                    <div class="coin-face coin-front"><div class="square-hole"><div class="mini-symbol"><div class="mini-solid"></div></div><span class="coin-text">陽</span></div></div>
-                    <div class="coin-face coin-back"><div class="square-hole"><div class="mini-symbol"><div class="mini-dashed-part"></div><div class="mini-dashed-part"></div></div><span class="coin-text">陰</span></div></div>
-                </div>
-            </div>
-            <div class="coin-wrapper" id="wrap3">
-                <div class="coin" id="coin3">
-                    <div class="coin-face coin-front"><div class="square-hole"><div class="mini-symbol"><div class="mini-solid"></div></div><span class="coin-text">陽</span></div></div>
-                    <div class="coin-face coin-back"><div class="square-hole"><div class="mini-symbol"><div class="mini-dashed-part"></div><div class="mini-dashed-part"></div></div><span class="coin-text">陰</span></div></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="status-text" id="statusText">CAST 1 OF 6</div>
-        <button class="toss-btn" id="tossBtn" onclick="castCoins()">TOSS COINS</button>
-
-        <div class="result-area" id="resultArea">
-            <div class="hex-block" id="presentBlock">
-                <div class="hex-label">PRESENT HEXAGRAM</div>
-                <h1 class="result-title" id="resultTitle1">Loading...</h1>
-                <p class="result-desc" id="resultDesc1"></p>
-            </div>
-            <div class="future-block" id="futureBlock">
-                <div class="hex-label" style="color:#8A3B36">CHANGING TO... (FUTURE CONDITION)</div>
-                <h1 class="result-title" id="resultTitle2">Loading...</h1>
-                <p class="result-desc" id="resultDesc2"></p>
-            </div>
-            <div class="restart-btn" onclick="resetDivination()">START A NEW QUESTION</div>
-        </div>
+    <div class="progress-ruler" id="progressRuler">
+        <div class="step-node active"></div><div class="step-node"></div><div class="step-node"></div>
+        <div class="step-node"></div><div class="step-node"></div><div class="step-node"></div>
     </div>
 
+    <div class="echo-mountains">
+        <svg viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice">
+            <path fill="var(--m-2)" d="M0,300 Q450,150 900,350 T1440,250 L1440,400 L0,400 Z"></path>
+            <path fill="var(--m-4)" d="M0,400 Q500,250 1100,400 T1440,350 L1440,400 L0,400 Z"></path>
+        </svg>
+    </div>
+    <div class="mist-layer"></div>
+
+    <main class="canvas-area">
+        <div class="background-hex" id="bgHex"></div>
+
+        <div class="interaction-overlay" id="uiCenter">
+            <div class="coin-group">
+                <div class="void-coin" id="vc1"><div class="c-side">陽</div><div class="c-side c-back">陰</div></div>
+                <div class="void-coin" id="vc2"><div class="c-side">陽</div><div class="c-side c-back">陰</div></div>
+                <div class="void-coin" id="vc3"><div class="c-side">陽</div><div class="c-side c-back">陰</div></div>
+            </div>
+            <div style="font-size: 0.7rem; color: #AAA; letter-spacing: 0.3em; margin-bottom: 1rem;">STEP <span id="stepNum">1</span> / 6</div>
+            
+            <div class="button-group">
+                <button class="ritual-btn" id="ritualBtn" onclick="tossProcess()">Consult Void</button>
+                <button class="ritual-btn quick" id="quickBtn" onclick="quickCast()">Instant Ritual</button>
+            </div>
+        </div>
+
+        <div class="reveal-container" id="revealContainer">
+            <div class="reveal-block" id="presentBox">
+                <h3>Present Hexagram</h3>
+                <h2 id="presentTitle"></h2>
+                <p id="presentDesc"></p>
+            </div>
+            <div class="reveal-block" id="futureBox" style="display: none;">
+                <h3>Future Condition</h3>
+                <h2 id="futureTitle"></h2>
+                <p id="futureDesc"></p>
+            </div>
+            <a href="javascript:location.reload()" class="reset-btn">NEW DIVINATION</a>
+        </div>
+    </main>
+
     <script>
-        const rawTextData = `
-Hexagram 1: Heaven above Heaven below. Yielding.
-The universe is united in power. So too the wise person execute his actions with power and creativity. Exceptional progress comes by correct persistence.
-Hexagram 2: Earth above, Earth below. Yielding.
-The receptive earth is in power. The wise person follows the natural path of calmness and correct persistence. Others may lead while you support their goals.
-Hexagram 3: Water above, Thunder below. Confusion.
-Thunderclouds indicate profound disquiet. Undertake no distant goal, but organize support. Concern yourself with the problems of the moment.
-Hexagram 4: Mountain above, Water below. Inexperience.
-As spring water collects at the base of the quiet mountain, the enlightened person fmds his level through learning, decisiveness, and correct persistence.
-Hexagram 5: Water above, Heaven below. Waiting.
-Clouds of anxietyrise. Do not be anxious, but wait with confidence. The moment will arrive when correct persistence brings progress.
-Hexagram 6: Heaven above, Water below. Conflict.
-Heaven and water, strength and profundity, conflict. Avoid confrontation. yield with caution. persist not against obstacles.
-Hexagram 7: Earth above, Water below. Cooperation.
-The receptive earth holds the water. and the wise person will find strength in the company of many fellows. With leadership there will be correct persistence and good fortune.
-Hexagram 8: Water above, Earth below. Unity.
-The receptive earth beneath. with profundity above, indicates the need for unity and collective awareness of the goal. Do not procrastinate. Join with others and return to the plan.
-Hexagram 9: Wind above,Heaven below. Restraint.
-The winds of gradual change. supported by the strength of Heaven. shows that restraint brings progress and satisfaction. Make minor changes and conceal all actions.
-Hexagram 10: Heaven above, Lake below. Correct conduct. 
-The excessive beneath the strong above. Discriminate between the inferior achieve and superior progress. Change gives way to stability.
-Hexagram 11: Earth above, Heaven below. Prosperity.
-The strength of Heaven mingles with the receptive earth. The wise leader benefits from this harmony. Good fortune approaches.
-Hexagram 12: Heaven above, Earth below. Stagnation.
-The strong and the receptive do not meet. Strong persons give way to the inferior. The enlightened person remains reserved to avoid misfortune. No advantage in persistence.
-Hexagram 13: Heaven above, Fire below. Community.
-Strength of heaven, dependence of fire. Recognize the dependence of all upon their fellows. The wiseperson seeks the collective flow to gain advantage.
-Hexagram 14: Fire above, Heaven below.Sovereignty.
-The strength of heaven holds a fiery intelligence, the maker of an enlightened ruler. Resist evil; exalt good. Proper Leadership brings great progress.
-Hexagram 15: Earth above, Mountain below. Moderation.
-The tranquil mountain amid the receptive earth indicates great progress through the reduction of excess. Progress comes by equality of extremes.
-Hexagram 16: Thunder above, Earth below. Harmony. 
-From the receptive earth comes the loud thunder. So from harmony with supporters does the wise person gain advantage.
-Hexagram 17: Lake above, Thunder below. Flexibility.
-In the midst of excess, growth and persistence produces progress. The enlightened person adapts. and leads the way from darkness to comfort.
-Hexagram 18: Mountain above, Wind below. Repair.
-Winds of gradual change wear away the mountain. Cultivate action in others to bring about repair and great progress. If starting. meditate on the future.
-Hexagram 19: Earth above, Lake below. Promotion.
-The earth above reflects in the lake beneath. So is the enlightened person willing to teach and learn from others. Progress comes through persistence.
-Hexagram 20: Wind above, Earth below. Contemplation.
-As the wind moves over the earth. so too the rulers of old travelled the world. They visited its regions and contemplated its many cultures. Explore new ideas.
-Hexagram 21: Fire above, Thunder below. Reform.
-The turbulence of thunder and lightning indicates the need for change. Achieve progress through reform. Administer justice.
-Hexagram 22: Mountain above, Fire below. Serenity.
-Illumination reveals the foot of the immovable mountain. So the wise person perceives and avoids disputes. No progress except in small matters.
-Hexagram 23: Mountain above, Earth below. Deterioration.
-The weak earth cannot support the mountain. The realm deteriorates. Enlightened people stabilize their lives through generosity toward the needy. 
-Hexagram 24: Earth above, Thunder below. Repetition.
-The beginning of a new cycle shows that repetition brings new progress toward a goal. Friends return. The repeating cycle is part of the Way.
-Hexagram 25: Heaven above, Thunder below. Spontaneity.
-Strength above and activity below indicates an alignment with a natural state. Act with persistence and inspiration, but without a true truer goal.
-Hexagram 26: Mountain above, Heaven below. Potential.
-The strength of the Heavens comes from within the mountain. The enlightened person studies the past's wisdom to develops his own character.
-Hexagram 27: Mountain above, Thunder below. Nurturing.
-Energy stirs beneath immobility. Support goals that are above question. but be cautious in expression and avoid the negative. Correct persistence brings one goog fortune.
-Hexagram 28: Lake above, Wind below. Imminent change.
-The enlightened person withdraws from the world to progress toward an independent goal. Stress is imminent.
-Hexagram 29: Water above, Water below. Danger.
-Profundity produces difficulty. The wise person learns confidence through danger. Remain calm in mind. keep all actions virtuous.
-Hexagram 30: Fire above, Fire below. Enlightened intelligence. 
-Intelligence shines above and below. The enlightened person cultivates intelligence and gains progress through correct persistence. Align yourself with goals that bring enlightenment.
-Hexagram 31: Lake above, Mountain below. Attraction.
-Tranquility combined with excess produces pleasure. Marriage brings good fortune. Accept others and act openly. All change is imminent.
-Hexagram 32: Thunder above, Wind below. Continuity.
-Activity and change teach well the value of endurance. Stand firm and move with persistence toward a goal. Freedom from error.
-Hexagram 33: Heaven above, Mountain below. Retreat.
-The tranquil mountain remains quiet under Heaven's gaze. So does the enlightened person maintain dignity in retreat. Persist only in small matters. and avoid mean conflict.
-Hexagram 34: Thunder above, Heaven below. Power.
-Activity in the light of day. The wise person acts within convention and with persistence. Use influence wisely.
-Hexagram 35: Fire above, Earth below. Progress.
-The sun rises above the earth. So does the enlightened person reveal virtue. Conditions favor able for progress. Help others through cleverness and virtue.
-Hexagram 36: Fire above, Earth below. Subtlety.
-Intelligence is hidden within the earth. Conceal goals, but do not abandon them. Trying conditions. but correct persistence brings one advantage.
-Hexagram 37: Wind above, Fire below. Family.
-Winds of change issue from intelligent action. The enlightened person acts in an orderly and substantial way. Faith and loyalty must be nurtuted.
-Hexagram 38: Fire above, Lake below. Contradiction.
-Intelligence contradicts excess. The enlightened person acts only in small matters. Maintain individuality.
-Hexagram 39: Water above, Mountain below. Obstacles.
-Profound movement meets immobility. The enlightened personexamines and peifectshis own behavior to gain strength.
-Hexagram 40: Thunder above, Water below. Liberation.
-Rain and thunder indicate profound activity. The enlightened person finds good fortune in quick action to restore normal conditions. Forgive others' faults.
-Hexagram 41: Mountain above, lake below. Decline.
-Excess is held by immobility. The enlightened person acts with moderation. Avoid anger, develop confidence. Sacrifice brings good fortune, freedom from error.
-Hexagram 42: Wind above, Thunder below, Benefit.
-Growth brings benefit. An enlightened person sees the good actions of his fellows. Imitate them and correct their mistakes to make progress toward a goal.
-Hexagram 43: Lake above, Heaven below. Resolve.
-Excess. drawn into Heaven's gaze. produces honesty. Do not use force. but rely on fair judges. Know your goal. tell your supporters.
-Hexagram 44: Heaven above, Wind below. Temptation.
-Heaven's power makes : stronger the wind of change . So too a ruler issues commands that become well known. Do not create a relationship with powerful persons or ideas. Exert discipline.
-Hexagram 45: Lake above, Earth below. Assembly.
-The earth receives excess. Unite with others, make sacrifices, and act with correct persistence to achieve a goal. Act with sincerity, avoid suspicion, and join with a wise leader.
-Hexagram 46: Earth above, Wind below. Advancement.
-Gradual change. nourished by the receptive earth. produces a path to virtue. The enlightened person persists in small matters to gain fortune. Approach leaders without fear.
-Hexagram 47: Lake above, Water below. Adversity.
-Excess lacks profundity. The enlightened person gains progress through courage. Ad-
-versity needs risks to achieve fortune. Speaking alone is uneffective.
-Hexagram 48: Water above, Wind below. Insight.
-Profound penetration and change. Truth is never exhausted. yet never the same. The enlightened person gains
-insight into truth and assists others to achieve it. If the truth is not heeded. bad fortune follows.
-Hexagram 49: Lake above, Fire below. Change.
-Intelligent consciousness amid excess produces change. The enlightened person appreciates past experience and present opportunity. Confidence and progress only after change is past.
-Hexagram 50: Fire above, Wind below. Order. 
-Intelligence combined with penetration makes progress and good fortune. The wise person aligns himself with the established order.
-Hexagram 51: Thunder above, Thunder below. Shock.
-Repeated activity produces sudden surprise and fear. The enlightened person seeks to improve himself and take advantage of the unpredictable.
-Hexagram 52: Mountain above, Mountain below. Meditation. 
-Tranquility upon tranquility. The enlightened person turns his back upon the larger situation and loses self awareness. Should he not notice anyone else, there is no error.
-Hexagram 53: Wind above, Mountain below. Development. 
-Penetrating change moves the immobile mountain. The enlightened person improves life through good conduct and correct persistence. Marriage brings good fortune.
-Hexagram 54: Thunder above, Lake below. Passivity.
-Action above, excess below. The enlightened person in current difficulty takes no action but considers the near future. Seek no goal.
-Hexagram 55: Thunder above, Fire below. Peaking intelligence.
-Intelligence combined with activity. This is the zenith of achievement. The enlightened person trusts his own judgment and makes progress. Do not fear decline, but shine like the sun.
-Hexagram 56: Fire above, Mountain below. Travel.
-Illumination upon the quiet mountain makes conditions favorable for travel. The wise person is clear-minded and not detained by disputes.
-Hexagram 57: Wind above, Wind below. Influence.
-Penetrating change above and below. The enlightened person acts gradually and only toward small goals. Wait and consider larger perspectives.
-Hexagram 58: Lake above, Lake below. Encouragement. 
-Openness and excess above and below. The wise person exchanges ideas with others to find cooperation. Progress and advantage in correct persistence.
-Hexagram 59: Wind above, Water below. Reunion.
-Gradual change above the profound water. Rulers meet with their subordinates. Advantage in cooperation, correct persistence. and the company offellows.
-Hexagram 60: Lake below, Water above. Limitation. 
-Profundity is held in check by excess. The wise person develops sound restraints and decides proper conduct. Extreme limitation, though, is no virtue.
-Hexagram 61 : Wind above, Lake below. Understanding. 
-Penetrating change above the open lake. From a distance the wise person gains understanding. Moderate disputes. and must avoid rigidity.
-Hexagram 62: Thunder above., Mountain below, Attention to detail.
-As the mountain remains tranquil in activity. so the wise person conducts himself with dignity and control. Be remorseful in losses and frugal in expenses. When birds fly too high, none hear their song.
-Hexagram 63: Water above, Fire below. Precaution.
-In consciousness is bred profound difficulty. The enlightened person defends against forthcoming adversity. Progress only in small matters. Confusion is imminent.
-Hexagram 64: Fire above, Water below. Vigilance.
-Consciousness above the difficult water. The wise person attends his position and progress carefully. Progress with great vigilance.
-`;
-
-        const elementDict = {
-            "Heaven": [1,1,1], "Lake": [0,1,1], "Fire": [1,0,1], "Thunder": [0,0,1],
-            "Wind": [1,1,0], "Water": [0,1,0], "Mountain": [1,0,0], "Earth": [0,0,0]
+        const hexData = {
+            "111111": { id: 1, title: "Yielding", desc: "The universe is united in power. So too the wise person execute his actions with power and creativity. Exceptional progress comes by correct persistence." },
+            "000000": { id: 2, title: "Yielding", desc: "The receptive earth is in power. The wise person follows the natural path of calmness and correct persistence. Others may lead while you support their goals." },
+            "100010": { id: 3, title: "Confusion", desc: "Thunderclouds indicate profound disquiet. Undertake no distant goal, but organize support. Concern yourself with the problems of the moment." },
+            "010001": { id: 4, title: "Inexperience", desc: "As spring water collects at the base of the quiet mountain, the enlightened person finds his level through learning, decisiveness, and correct persistence." },
+            "111010": { id: 5, title: "Waiting", desc: "Clouds of anxiety rise. Do not be anxious, but wait with confidence. The moment will arrive when correct persistence brings progress." },
+            "010111": { id: 6, title: "Conflict", desc: "Heaven and water, strength and profundity, conflict. Avoid confrontation. yield with caution. persist not against obstacles." },
+            "010000": { id: 7, title: "Cooperation", desc: "The receptive earth holds the water. and the wise person will find strength in the company of many fellows. With leadership there will be correct persistence and good fortune." },
+            "000010": { id: 8, title: "Unity", desc: "The receptive earth beneath. with profundity above, indicates the need for unity and collective awareness of the goal. Do not procrastinate. Join with others and return to the plan." },
+            "111011": { id: 9, title: "Restraint", desc: "The winds of gradual change. supported by the strength of Heaven. shows that restraint brings progress and satisfaction. Make minor changes and conceal all actions." },
+            "110111": { id: 10, title: "Correct conduct", desc: "The excessive beneath the strong above. Discriminate between the inferior achieve and superior progress. Change gives way to stability." },
+            "111000": { id: 11, title: "Prosperity", desc: "The strength of Heaven mingles with the receptive earth. The wise leader benefits from this harmony. Good fortune approaches." },
+            "000111": { id: 12, title: "Stagnation", desc: "The strong and the receptive do not meet. Strong persons give way to the inferior. The enlightened person remains reserved to avoid misfortune. No advantage in persistence." },
+            "101111": { id: 13, title: "Community", desc: "Strength of heaven, dependence of fire. Recognize the dependence of all upon their fellows. The wise person seeks the collective flow to gain advantage." },
+            "111101": { id: 14, title: "Sovereignty", desc: "The strength of heaven holds a fiery intelligence, the maker of an enlightened ruler. Resist evil; exalt good. Proper Leadership brings great progress." },
+            "001000": { id: 15, title: "Moderation", desc: "The tranquil mountain amid the receptive earth indicates great progress through the reduction of excess. Progress comes by equality of extremes." },
+            "000100": { id: 16, title: "Harmony", desc: "From the receptive earth comes the loud thunder. So from harmony with supporters does the wise person gain advantage." },
+            "100110": { id: 17, title: "Flexibility", desc: "In the midst of excess, growth and persistence produces progress. The enlightened person adapts. and leads the way from darkness to comfort." },
+            "011001": { id: 18, title: "Repair", desc: "Winds of gradual change wear away the mountain. Cultivate action in others to bring about repair and great progress. If starting. meditate on the future." },
+            "110000": { id: 19, title: "Promotion", desc: "The earth above reflects in the lake beneath. So is the enlightened person willing to teach and learn from others. Progress comes through persistence." },
+            "000011": { id: 20, title: "Contemplation", desc: "As the wind moves over the earth. so too the rulers of old travelled the world. They visited its regions and contemplated its many cultures. Explore new ideas." },
+            "100101": { id: 21, title: "Reform", desc: "The turbulence of thunder and lightning indicates the need for change. Achieve progress through reform. Administer justice." },
+            "101001": { id: 22, title: "Serenity", desc: "Illumination reveals the foot of the immovable mountain. So the wise person perceives and avoids disputes. No progress except in small matters." },
+            "000001": { id: 23, title: "Deterioration", desc: "The weak earth cannot support the mountain. The realm deteriorates. Enlightened people stabilize their lives through generosity toward the needy." },
+            "100000": { id: 24, title: "Repetition", desc: "The beginning of a new cycle shows that repetition brings new progress toward a goal. Friends return. The repeating cycle is part of the Way." },
+            "100111": { id: 25, title: "Spontaneity", desc: "Strength above and activity below indicates an alignment with a natural state. Act with persistence and inspiration, but without a true truer goal." },
+            "111001": { id: 26, title: "Potential", desc: "The strength of the Heavens comes from within the mountain. The enlightened person studies the past's wisdom to develops his own character." },
+            "100001": { id: 27, title: "Nurturing", desc: "Energy stirs beneath immobility. Support goals that are above question. but be cautious in expression and avoid the negative. Correct persistence brings one goog fortune." },
+            "011110": { id: 28, title: "Imminent change", desc: "The enlightened person withdraws from the world to progress toward an independent goal. Stress is imminent." },
+            "010010": { id: 29, title: "Danger", desc: "Profundity produces difficulty. The wise person learns confidence through danger. Remain calm in mind. keep all actions virtuous." },
+            "101101": { id: 30, title: "Enlightened intelligence", desc: "Intelligence shines above and below. The enlightened person cultivates intelligence and gains progress through correct persistence. Align yourself with goals that bring enlightenment." },
+            "001110": { id: 31, title: "Attraction", desc: "Tranquility combined with excess produces pleasure. Marriage brings good fortune. Accept others and act openly. All change is imminent." },
+            "011100": { id: 32, title: "Continuity", desc: "Activity and change teach well the value of endurance. Stand firm and move with persistence toward a goal. Freedom from error." },
+            "001111": { id: 33, title: "Retreat", desc: "The tranquil mountain remains quiet under Heaven's gaze. So does the enlightened person maintain dignity in retreat. Persist only in small matters. and avoid mean conflict." },
+            "111100": { id: 34, title: "Power", desc: "Activity in the light of day. The wise person acts within convention and with persistence. Use influence wisely." },
+            "000101": { id: 35, title: "Progress", desc: "The sun rises above the earth. So does the enlightened person reveal virtue. Conditions favor able for progress. Help others through cleverness and virtue." },
+            "101000": { id: 36, title: "Subtlety", desc: "Intelligence is hidden within the earth. Conceal goals, but do not abandon them. Trying conditions. but correct persistence brings one advantage." },
+            "101011": { id: 37, title: "Family", desc: "Winds of change issue from intelligent action. The enlightened person acts in an orderly and substantial way. Faith and loyalty must be nurtuted." },
+            "110101": { id: 38, title: "Contradiction", desc: "Intelligence contradicts excess. The enlightened person acts only in small matters. Maintain individuality." },
+            "001010": { id: 39, title: "Obstacles", desc: "Profound movement meets immobility. The enlightened person examines and peifectshis own behavior to gain strength." },
+            "010100": { id: 40, title: "Liberation", desc: "Rain and thunder indicate profound activity. The enlightened person finds good fortune in quick action to restore normal conditions. Forgive others' faults." },
+            "110001": { id: 41, title: "Decline", desc: "Excess is held by immobility. The enlightened person acts with moderation. Avoid anger, develop confidence. Sacrifice brings good fortune, freedom from error." },
+            "100011": { id: 42, title: "Benefit", desc: "Growth brings benefit. An enlightened person sees the good actions of his fellows. Imitate them and correct their mistakes to make progress toward a goal." },
+            "111110": { id: 43, title: "Resolve", desc: "Excess. drawn into Heaven's gaze. produces honesty. Do not use force. but rely on fair judges. Know your goal. tell your supporters." },
+            "011111": { id: 44, title: "Temptation", desc: "Heaven's power makes : stronger the wind of change . So too a ruler issues commands that become well known. Do not create a relationship with powerful persons or ideas. Exert discipline." },
+            "000110": { id: 45, title: "Assembly", desc: "The earth receives excess. Unite with others, make sacrifices, and act with correct persistence to achieve a goal. Act with sincerity, avoid suspicion, and join with a wise leader." },
+            "011000": { id: 46, title: "Advancement", desc: "Gradual change. nourished by the receptive earth. produces a path to virtue. The enlightened person persists in small matters to gain fortune. Approach leaders without fear." },
+            "010110": { id: 47, title: "Adversity", desc: "Excess lacks profundity. The enlightened person gains progress through courage. Adversity needs risks to achieve fortune. Speaking alone is uneffective." },
+            "011010": { id: 48, title: "Insight", desc: "Profound penetration and change. Truth is never exhausted. yet never the same. The enlightened person gains insight into truth and assists others to achieve it. If the truth is not heeded. bad fortune follows." },
+            "101110": { id: 49, title: "Change", desc: "Intelligent consciousness amid excess produces change. The enlightened person appreciates past experience and present opportunity. Confidence and progress only after change is past." },
+            "011101": { id: 50, title: "Order", desc: "Intelligence combined with penetration makes progress and good fortune. The wise person aligns himself with the established order." },
+            "100100": { id: 51, title: "Shock", desc: "Repeated activity produces sudden surprise and fear. The enlightened person seeks to improve himself and take advantage of the unpredictable." },
+            "001001": { id: 52, title: "Meditation", desc: "Tranquility upon tranquility. The enlightened person turns his back upon the larger situation and loses self awareness. Should he not notice anyone else, there is no error." },
+            "001011": { id: 53, title: "Development", desc: "Penetrating change moves the immobile mountain. The enlightened person improves life through good conduct and correct persistence. Marriage brings good fortune." },
+            "110100": { id: 54, title: "Passivity", desc: "Action above, excess below. The enlightened person in current difficulty takes no action but considers the near future. Seek no goal." },
+            "101100": { id: 55, title: "Peaking intelligence", desc: "Intelligence combined with activity. This is the zenith of achievement. The enlightened person trusts his own judgment and makes progress. Do not fear decline, but shine like the sun." },
+            "001101": { id: 56, title: "Travel", desc: "Illumination upon the quiet mountain makes conditions favorable for travel. The wise person is clear-minded and not detained by disputes." },
+            "011011": { id: 57, title: "Influence", desc: "Penetrating change above and below. The enlightened person acts gradually and only toward small goals. Wait and consider larger perspectives." },
+            "110110": { id: 58, title: "Encouragement", desc: "Openness and excess above and below. The wise person exchanges ideas with others to find cooperation. Progress and advantage in correct persistence." },
+            "010011": { id: 59, title: "Reunion", desc: "Gradual change above the profound water. Rulers meet with their subordinates. Advantage in cooperation, correct persistence. and the company offellows." },
+            "110010": { id: 60, title: "Limitation", desc: "Profundity is held in check by excess. The wise person develops sound restraints and decides proper conduct. Extreme limitation, though, is no virtue." },
+            "110011": { id: 61, title: "Understanding", desc: "Penetrating change above the open lake. From a distance the wise person gains understanding. Moderate disputes. and must avoid rigidity." },
+            "001100": { id: 62, title: "Attention to detail", desc: "As the mountain remains tranquil in activity. so the wise person conducts himself with dignity and control. Be remorseful in losses and frugal in expenses. When birds fly too high, none hear their song." },
+            "101010": { id: 63, title: "Precaution", desc: "In consciousness is bred profound difficulty. The enlightened person defends against forthcoming adversity. Progress only in small matters. Confusion is imminent." },
+            "010101": { id: 64, title: "Vigilance", desc: "Consciousness above the difficult water. The wise person attends his position and progress carefully. Progress with great vigilance." }
         };
-        const hexagramDictionary = {}; 
 
-        for (let i = 0; i < 64; i++) {
-            const lines = [(i & 32)?1:0, (i & 16)?1:0, (i & 8)?1:0, (i & 4)?1:0, (i & 2)?1:0, (i & 1)?1:0];
-            hexagramDictionary[lines.join('')] = {
-                title: "A Mysterious Hexagram",
-                desc: "The pattern of the falling coins reflects the cosmic vibrations of your mind."
-            };
+        let step = 0;
+        let cRotations = [0, 0, 0];
+        let currentHexLines = []; 
+
+        function disableButtons() {
+            document.getElementById('ritualBtn').disabled = true;
+            document.getElementById('quickBtn').disabled = true;
         }
 
-        const blocks = rawTextData.split(/(?=Hexagram \d+\s*:)/);
-        blocks.forEach(block => {
-            if (!block.trim()) return;
-            const lines = block.trim().split('\n');
-            const header = lines[0]; const desc = lines.slice(1).join(' ').trim();
-            const idMatch = header.match(/Hexagram\s*(\d+)\s*:/);
-            const trigramMatch = header.match(/:\s*([A-Za-z]+)\s*above[^A-Za-z]*([A-Za-z]+)\s*below/i);
-            if(idMatch && trigramMatch) {
-                const topStr = trigramMatch[1].charAt(0).toUpperCase() + trigramMatch[1].slice(1).toLowerCase();
-                const bottomStr = trigramMatch[2].charAt(0).toUpperCase() + trigramMatch[2].slice(1).toLowerCase();
-                const combined = [...(elementDict[bottomStr] || [0,0,0]), ...(elementDict[topStr] || [0,0,0])]; 
-                
-                hexagramDictionary[combined.join('')] = { 
-                    title: header.replace(/Hexagram \d+\s*:/, `Hexagram ${idMatch[1]}:\n`), 
-                    desc: desc 
-                };
+        function enableButtons() {
+            document.getElementById('ritualBtn').disabled = false;
+            document.getElementById('quickBtn').disabled = false;
+        }
+
+        function tossProcess() {
+            if (step >= 6) return;
+            disableButtons();
+
+            let heads = 0;
+            for (let i = 1; i <= 3; i++) {
+                const isHeads = Math.random() > 0.5;
+                if (isHeads) heads++;
+                cRotations[i-1] += (isHeads ? 1440 : 1620);
+                document.getElementById('vc' + i).style.transform = `rotateY(${cRotations[i-1]}deg)`;
             }
-        });
 
-        let tossCount = 0;
-        let generatedLines1 = []; 
-        let generatedLines2 = []; 
-        let hasChangingLine = false; 
-        let isTossing = false;
-
-        const btn = document.getElementById('tossBtn');
-        const statusText = document.getElementById('statusText');
-        const builder = document.getElementById('hexagramBuilder');
-        const wrappers = [document.getElementById('wrap1'), document.getElementById('wrap2'), document.getElementById('wrap3')];
-        const coins = [document.getElementById('coin1'), document.getElementById('coin2'), document.getElementById('coin3')];
-
-        let currentAngles = [0, 0, 0];
-
-        function castCoins() {
-            if (isTossing || tossCount >= 6) return;
-            isTossing = true; btn.disabled = true;
-            statusText.innerText = "CONSULTING...";
-
-            const results = [
-                Math.random() > 0.5 ? 3 : 2,
-                Math.random() > 0.5 ? 3 : 2,
-                Math.random() > 0.5 ? 3 : 2
-            ];
-            const sum = results.reduce((a, b) => a + b, 0);
-
-            wrappers.forEach((wrap, index) => {
-                wrap.classList.add('tossing');
-                const isHeads = results[index] === 3;
-                const targetAngle = isHeads ? 1800 : 1980; 
-                currentAngles[index] += targetAngle; 
-                coins[index].style.transform = `rotateX(${currentAngles[index]}deg)`;
-                
-                setTimeout(() => { wrap.classList.remove('tossing'); }, 800); 
-            });
+            const score = (heads === 3) ? 9 : (heads === 0) ? 6 : (heads === 2) ? 8 : 7;
+            currentHexLines.push(score);
 
             setTimeout(() => {
-                let isYang1 = false; 
-                let isYang2 = false; 
-                let isChanging = false;
+                appendLineToBackground(score);
 
-                if (sum === 6) { 
-                    isYang1 = false; isYang2 = true; isChanging = true;
-                } else if (sum === 7) { 
-                    isYang1 = true; isYang2 = true; isChanging = false;
-                } else if (sum === 8) { 
-                    isYang1 = false; isYang2 = false; isChanging = false;
-                } else if (sum === 9) { 
-                    isYang1 = true; isYang2 = false; isChanging = true;
-                }
-
-                if(isChanging) hasChangingLine = true;
-
-                generatedLines1.push(isYang1 ? 1 : 0);
-                generatedLines2.push(isYang2 ? 1 : 0);
-
-                const wrapDiv = document.createElement('div');
-                wrapDiv.className = `line-wrapper`;
-                
-                const lineDiv = document.createElement('div');
-                lineDiv.className = `line ${isYang1 ? 'solid' : 'dashed'}`;
-                
-                const dotDiv = document.createElement('div');
-                dotDiv.className = `line-dot`;
-                if(isChanging) dotDiv.innerText = '•'; 
-
-                wrapDiv.appendChild(lineDiv);
-                wrapDiv.appendChild(dotDiv);
-                builder.appendChild(wrapDiv);
-
-                tossCount++;
-                isTossing = false;
-
-                if (tossCount < 6) {
-                    btn.disabled = false;
-                    statusText.innerText = `CAST ${tossCount + 1} OF 6`;
+                step++;
+                if (step < 6) {
+                    enableButtons();
+                    updateStepUI();
                 } else {
-                    btn.style.display = 'none'; 
-                    statusText.innerText = "THE ORACLE HAS SPOKEN";
-                    showResult();
+                    processFinalResult();
                 }
-            }, 1200); 
+            }, 1200);
         }
 
-        function showResult() {
-            const key1 = generatedLines1.join('');
-            const data1 = hexagramDictionary[key1];
-            document.getElementById('resultTitle1').innerText = data1.title;
-            document.getElementById('resultDesc1').innerText = data1.desc;
+        function quickCast() {
+            if (step >= 6) return;
+            disableButtons();
 
-            if(hasChangingLine) {
-                const key2 = generatedLines2.join('');
-                const data2 = hexagramDictionary[key2];
-                document.getElementById('resultTitle2').innerText = data2.title;
-                document.getElementById('resultDesc2').innerText = data2.desc;
-                document.getElementById('futureBlock').style.display = 'block';
-            } else {
-                document.getElementById('futureBlock').style.display = 'none';
+            for (let i = 1; i <= 3; i++) {
+                cRotations[i-1] += 2160; 
+                document.getElementById('vc' + i).style.transform = `rotateY(${cRotations[i-1]}deg)`;
             }
 
-            document.getElementById('resultArea').classList.add('show');
-            setTimeout(() => { document.getElementById('resultArea').scrollTop = 0; }, 100);
+            let rapidInterval = setInterval(() => {
+                if (step >= 6) {
+                    clearInterval(rapidInterval);
+                    processFinalResult();
+                    return;
+                }
+
+                let heads = 0;
+                for (let i = 1; i <= 3; i++) {
+                    if (Math.random() > 0.5) heads++;
+                }
+
+                const score = (heads === 3) ? 9 : (heads === 0) ? 6 : (heads === 2) ? 8 : 7;
+                currentHexLines.push(score);
+                appendLineToBackground(score);
+
+                step++;
+                updateStepUI();
+
+            }, 250); 
         }
 
-        function resetDivination() {
-            tossCount = 0; generatedLines1 = []; generatedLines2 = []; 
-            hasChangingLine = false; currentAngles = [0,0,0];
-            builder.innerHTML = '';
-            document.getElementById('resultArea').classList.remove('show');
-            document.getElementById('futureBlock').style.display = 'none';
-            btn.style.display = 'block'; btn.disabled = false;
-            statusText.innerText = "CAST 1 OF 6";
-            coins.forEach(coin => coin.style.transform = `rotateX(0deg)`);
+        function appendLineToBackground(score) {
+            const isYang = (score === 7 || score === 9);
+            const isDotted = (score === 6 || score === 9);
+            
+            const line = document.createElement('div');
+            line.className = `bg-line ${isYang ? '' : 'dashed'}`;
+            if(isDotted) {
+                const dot = document.createElement('div');
+                dot.className = 'dot-mark';
+                dot.innerText = '•';
+                line.appendChild(dot);
+            }
+            document.getElementById('bgHex').appendChild(line);
+        }
+
+        function updateStepUI() {
+            const displayStep = Math.min(step, 6);
+            if(displayStep < 6) {
+                document.getElementById('stepNum').innerText = displayStep + 1;
+            }
+            const nodes = document.querySelectorAll('.step-node');
+            nodes.forEach(n => n.classList.remove('active'));
+            if(step < 6) {
+                nodes[step].classList.add('active');
+            } else {
+                nodes[5].classList.add('active');
+            }
+        }
+
+        function processFinalResult() {
+            const presentBinary = currentHexLines.map(s => (s === 7 || s === 9) ? "1" : "0").join('');
+            const futureBinary = currentHexLines.map(s => {
+                if (s === 6) return "1"; 
+                if (s === 9) return "0"; 
+                return (s === 7) ? "1" : "0";
+            }).join('');
+
+            const hasChange = currentHexLines.some(s => s === 6 || s === 9);
+
+            document.getElementById('uiCenter').style.opacity = '0';
+            document.getElementById('progressRuler').style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('uiCenter').style.display = 'none';
+                document.getElementById('progressRuler').style.display = 'none';
+
+                document.getElementById('bgHex').classList.add('focused');
+                
+                document.getElementById('revealContainer').style.display = 'flex';
+
+                renderHex('present', presentBinary);
+                if (hasChange) {
+                    renderHex('future', futureBinary);
+                    document.getElementById('futureBox').style.display = 'block';
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('presentBox').classList.add('active');
+                    if(hasChange) setTimeout(() => document.getElementById('futureBox').classList.add('active'), 400);
+                }, 100);
+
+            }, 800);
+        }
+
+        function renderHex(type, binary) {
+            const data = hexData[binary];
+            document.getElementById(type + 'Title').innerText = `Hexagram ${data.id}: ${data.title}`;
+            document.getElementById(type + 'Desc').innerText = data.desc;
         }
     </script>
 </body>
