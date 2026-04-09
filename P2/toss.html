@@ -120,18 +120,23 @@
         }
 
         .mist-layer { position: fixed; bottom: -5%; width: 120%; height: 40vh; background: radial-gradient(ellipse at center, var(--ink-mist) 0%, transparent 70%); filter: blur(40px); pointer-events: none; z-index: 2; }
+
+        .top-nav { 
+            position: absolute; 
+            top: 6vh; 
+            left: 5vw; 
+            z-index: 1100; 
+        }
+        .top-nav a { 
+            text-decoration: none; 
+            color: var(--text-dark); 
+            font-size: 1.2rem; 
+            letter-spacing: 0.1em; 
+        }
     </style>
 </head>
 <body>
-
-    <header>
-        <a href="index.html" class="logo">I CHING</a>
-        <nav class="nav-links">
-            <a href="index.html#about">History</a>
-            <a href="hexagrams.html">Patterns</a>
-            <a href="elements.html">Elements</a>
-        </nav>
-    </header>
+    <nav class="top-nav"><a href="index.html">&lt; Home</a></nav>
 
     <div class="progress-ruler" id="progressRuler">
         <div class="step-node active"></div><div class="step-node"></div><div class="step-node"></div>
@@ -159,7 +164,6 @@
             
             <div class="button-group">
                 <button class="ritual-btn" id="ritualBtn" onclick="tossProcess()">Consult Void</button>
-                <button class="ritual-btn quick" id="quickBtn" onclick="quickCast()">Instant Ritual</button>
             </div>
         </div>
 
@@ -252,12 +256,12 @@
 
         function disableButtons() {
             document.getElementById('ritualBtn').disabled = true;
-            document.getElementById('quickBtn').disabled = true;
+            // document.getElementById('quickBtn').disabled = true;
         }
 
         function enableButtons() {
             document.getElementById('ritualBtn').disabled = false;
-            document.getElementById('quickBtn').disabled = false;
+            // document.getElementById('quickBtn').disabled = false;
         }
 
         function tossProcess() {
@@ -287,7 +291,7 @@
                 }
             }, 1200);
         }
-
+        /*
         function quickCast() {
             if (step >= 6) return;
             disableButtons();
@@ -318,6 +322,7 @@
 
             }, 250); 
         }
+        */
 
         function appendLineToBackground(score) {
             const isYang = (score === 7 || score === 9);
