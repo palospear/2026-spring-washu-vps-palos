@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview With Mercury Wang</title>
+    <link rel="icon" type="image/png" href="/assets/images/arcade-machine.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cinzel:wght@600;800&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bellefair&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f2eee8; 
+            
+            background-image: 
+                linear-gradient(to bottom, 
+                    rgba(210, 120, 50, 0) 0%,     
+                    rgba(213, 147, 96, 0.15) 50%, 
+                    rgba(215, 170, 141, 0.4) 100%),  
+                url('bg.jpg'); 
+                
+            background-attachment: scroll, fixed;
+            
+            background-size: 100% 100%, cover;
+            background-position: top center, center;
+            
+            color: #2c241b;
+            font-family: "Bellefair", serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+        }
+        audio:focus, a:focus, .evolution-interactive:focus {
+            outline: none;
+        }
+
+        .editorial-container {
+            max-width: 1200px;
+            width: 90%; 
+            margin: 0 auto;
+            padding: 80px 0; 
+        }
+
+        .intro-section {
+            margin: 40px 0;
+            position: relative;
+            max-width: 580px; 
+        }
+
+        .intro-label {
+            display: inline-block;
+            background: #8c3b2c;
+            color: #f2eee8;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .intro-text {
+            font-size: 1.6rem;
+            line-height: 1.6;
+            margin: 0;
+            color: #4a3b2c;
+            font-style: italic;
+        }
+
+        .tape-highlight {
+            background-color: rgba(140, 59, 44, 0.18); 
+            padding: 2px 10px;
+            margin: 0 -4px;
+            border-radius: 2px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
+            display: inline;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 5rem;
+            line-height: 0.9;
+            margin: 0;
+            color: #2c241b;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 2.2rem;
+            color: #8c3b2c;
+            margin-top: 10px;
+            margin-bottom: 60px;
+            transform: rotate(-2deg);
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: #8c3b2c; 
+            margin-top: 100px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+        }
+
+        .timestamp {
+            font-family: 'Caveat', cursive;
+            font-size: 1.45rem;
+            color: #5a4b3c;
+            text-transform: none;
+            letter-spacing: 0;
+            font-weight: 500;
+        }
+
+        .game-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-style: italic;
+            color: #8c3b2c;
+        }
+
+        .attachment-note {
+            position: absolute;
+            background-color: #fcf9f2;
+            border: 1px solid #d3c9ba;
+            padding: 12px 18px;
+            box-shadow: 2px 6px 15px rgba(0,0,0,0.08);
+            z-index: 10;
+            font-family: 'Caveat', cursive;
+            font-size: 1.4rem;
+            transition: transform 0.3s ease;
+        }
+
+        .attachment-note:hover { transform: rotate(0deg) scale(1.05) !important; }
+
+        .attachment-note::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-3deg);
+            width: 40px;
+            height: 22px;
+            background-color: rgba(216, 207, 192, 0.85); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .attachment-note a {
+            color: #5a4b3c;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
+            border-bottom: 1px dashed #c0b5a4;
+        }
+
+        .audio-tape-container {
+            margin: 50px 0 30px 0;
+            padding: 25px 30px 20px 30px;
+            background-color: #fcf9f2;
+            border: 1px solid #d3c9ba;
+            position: relative;
+            max-width: 500px;
+            transform: rotate(-1deg);
+        }
+
+        .audio-label { font-family: 'Caveat', cursive; font-size: 1.6rem; color: #8c3b2c; text-align: center; }
+
+        audio { width: 100%; height: 45px; }
+
+        .qa-block { 
+            margin: 50px auto; 
+            padding-left: 30px; 
+            border-left: 2px dashed #c0b5a4; 
+            max-width: 950px; 
+        }
+
+        .question { font-family: 'Caveat', cursive; font-size: 2.2rem; color: #4a3b2c; margin-bottom: 15px; line-height: 1.2; }
+
+        .question::before { content: "Q. "; font-family: 'Cinzel', serif; color: #8c3b2c; font-size: 1.5rem; }
+
+        .answer { font-size: 1.7rem; line-height: 1.8; color: #2c241b; } 
+
+        .pull-quote {
+            font-family: 'Cinzel', serif; font-size: 2.5rem; color: #8c3b2c; text-align: center;
+            margin: 80px 0; line-height: 1.3; border-top: 1px solid #8c3b2c; border-bottom: 1px solid #8c3b2c; padding: 35px 0;
+        }
+
+        .offset-frame { position: relative; display: inline-block; margin-bottom: 30px; box-sizing: border-box; }
+        .offset-frame img { display: block; width: 100%; border: 1px solid #d3c9ba; background-color: #fff; padding: 8px; box-sizing: border-box; }
+
+        .evolution-interactive { 
+            position: relative; 
+            width: 100%; 
+            cursor: crosshair; 
+            display: block;
+            margin-bottom: 30px; 
+        }
+        
+        .evolution-interactive img.form-human { 
+            display: block;
+            width: 100%; 
+            height: auto; 
+            transition: opacity 1s ease; 
+        }
+
+        .evolution-interactive img.form-spirit { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            object-fit: contain; 
+            z-index: 3; 
+            opacity: 0; 
+            transition: opacity 1s ease;
+        }
+
+        .evolution-interactive:hover .form-spirit { opacity: 1; }
+        .evolution-interactive:hover .form-human { opacity: 0; }
+
+        .image-grid-2 { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px 30px; 
+        }
+
+        .image-grid-2 .offset-frame {
+            margin-bottom: 0; 
+            width: 100%;
+        }
+        
+        .image-grid-2 img {
+            aspect-ratio: 16 / 9; 
+            object-fit: cover; 
+            object-position: center;
+        }
+        .img-caption { font-family: 'Caveat', cursive; font-size: 1.4rem; color: #5a4b3c; margin-top: 15px; text-align: right; }
+        .profile-card { float: right; width: 400px; margin-left: 40px; margin-bottom: 20px; transform: rotate(2deg); }
+        .clearfix::after { content: ""; clear: both; display: table; }
+    </style>
+</head>
+<body>
+
+<div class="editorial-container">
+    
+    <header class="clearfix" style="margin-bottom: 150px;">
+        <div class="offset-frame profile-card">
+            <img src="/assets/images/Mercury.jpg" alt="Mercury Wang">
+            <div class="img-caption" style="text-align: center;">Mercury Wang</div>
+        </div>
+        
+        <h1>Framing<br>The Game</h1>
+        <div class="subtitle">How Screens Shape the Gaming Experience</div>
+        
+        <div class="intro-section">
+            <span class="intro-label">INTRO</span>
+            <p class="intro-text">
+                Mercury Wang is a junior in Sam Fox School studying time based media art. She is also very interested in media studies, majoring in Film and Media Studies with a minor in Human Computer Interaction. 
+            </p>
+        </div>
+
+        <div class="audio-tape-container">
+            <div class="audio-label">The Interview Recording</div>
+            <audio controls>
+                <source src="/assets/audio/interview.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+    </header>
+
+    <h2>01 / Personal Idea <span class="timestamp">[00:21]</span></h2>
+    <div class="qa-block">
+        <div class="question">So you're heading into your senior year. I know you're super interested in game design, but what's your main focus right now? Are you leaning more toward UI level design or something else?</div>
+        <div class="answer">
+            Yeah, that's a great question. I'm more interested in how to mediate the game's diegesis with our screen and how to introduce the players better into the game world. So I think that's more on the mechanic side.
+        </div>
+    </div>
+
+    <div class="qa-block">
+        <div class="question">Looking back at freshman year versus now, how has the way you look at the screen as a medium actually changed? <span class="timestamp">[00:49]</span></div>
+        <div class="answer">
+            Well, when I was a freshman, I think my understanding of the screen is that it's part of the gaming diegesis or the game apparatus so that it conceals itself as if it's natural, as if the content that it contains is evident by itself. <span class="tape-highlight">The screen evades into the background of the game.</span> However, now I think the screen itself is speaking out. It's speaking the game's ideology, and it testifies its own existence and also contributes to the medium specificity of this game.
+        </div>
+    </div>
+
+    <div class="pull-quote">
+        "It's speaking the game's ideology, and it testifies its own existence and also contributes to the medium specificity of this game."
+    </div>
+
+    <h2>02 / DIEGETIC UI & IMMERSION <span class="timestamp">[01:39]</span></h2>
+    <div class="qa-block">
+        <div class="question">What's your favorite game right now and what exactly draws you to it?</div>
+        <div class="answer">
+            Yeah, I think that's a really great question. My favorite game is <span class="game-title">Return of the Obra Dinn</span>. I think it's very shocking, since it's mind-bending. And well, if we think it back to screen, it has a lot of layouts or interfaces. It has a book that recalls memories. It has an illusional world whenever a clock ticks, then the avatar enters, and then also have a time machine kind of agent. And through these various visual elements, <span class="tape-highlight">the screens become a mediator for them.</span> The players could enter each interface and go out to the interface. And I think that is very fascinating to see how the world view is unfolded through navigation of the interface.
+        </div>
+    </div>
+
+    <div class="qa-block">
+        <div class="question">Because now a lot of games incorporate UI directly into the world, like you can point out an actual map instead of opening the menu. So what do you think is the best part of it, and what is the hardest part of making that work? <span class="timestamp">[02:55]</span></div>
+        <div class="answer">
+            Yeah, I get what you mean. I think the main point is how to integrate the menu part, or to integrate the map or the other relevant icons into the world view of this game. So back to <span class="game-title">Return of the Obra Dinn</span>, it's interesting, because <span class="tape-highlight">even when we are navigating the menu, which is like taking a step back from the game world, right?</span> We are still in the game content. We are still justified by the narration. And I think for a lot of, you know, low tech RPGs or low tech FPS that those boys, you know, play, these games have a really like a barrier between menus that are directly addressing the players or the users and the game world. And I think it will be interesting to have either a narration or the camera angles or the UI, UX layout that bridges this gap.
+        </div>
+    </div>
+
+    <div style="position: relative; margin-top: 40px;">
+        <div class="image-grid-2">
+            <div class="offset-frame"><img src="/assets/images/Return 3.jpg" alt="Obra Dinn Menu"></div>
+            <div class="offset-frame"><img src="/assets/images/Return 2.jpg" alt="Obra Dinn World"></div>
+            <div class="offset-frame"><img src="/assets/images/Return 1.jpg" alt="Obra Dinn World"></div>
+            <div class="offset-frame"><img src="/assets/images/Return 4.jpg" alt="Obra Dinn World"></div>
+        </div>
+        <div class="img-caption">Return of the Obra Dinn UI</div>
+        
+        <div class="attachment-note" style="bottom: 0px; left:-20px; transform: rotate(3deg);">
+            <a href="https://store.steampowered.com/app/653530/Return_of_the_Obra_Dinn/" target="_blank"><span class="icon">🔗</span>Steam Link</a>
+            <a href="https://www.gameuidatabase.com/gameData.php?id=1460" target="_blank"><span class="icon">👁️</span>View UI Gallery</a>
+        </div>
+    </div>
+
+    <div class="qa-block">
+        <div class="question">I love that. Like UI needs to guide the user to still make them immersive in the game more? <span class="timestamp">[04:14]</span></div>
+        <div class="answer">
+            Yeah, I think "immersive" is a really great word, because when the word immersion initially came out, it means like, <span class="tape-highlight">create an alternative living experience</span>, right? What if we're not walking on the land? What if all human beings are in water? And does that solve our answers to our everyday struggle, dilemma, trouble, and how that brings an alternative answer to our lives. And games, I believe, initially when I was thinking about games, it should offer this alternatively, but when games are appropriated for only code-based interaction or military uses it doesn't suit that purpose. So, yeah, I really like your bringing up the word immersion.
+        </div>
+    </div>
+
+    <div class="qa-block">
+        <div class="question">So when you're playing a game, what visual elements usually catches your eye first, is it lighting, UI or colors? <span class="timestamp">[05:11]</span></div>
+        <div class="answer">
+            Well, I think I will use the example of maybe <span class="game-title">Operation: Tango</span>. It has a hacker perspective, that you are actually cyber attacking your enemy's website, and at that time, the UI layout is pretty much the same with our own everyday coding experiences, and that creates this immersion and collapsing of the diegesis, right? We're using a same screen for coding and everyday CSE or HCI homework, as well as using this gaming interface on the screen for the game content. So when <span class="tape-highlight">the game diegesis and our everyday life collapse on the same screen,</span> that is when immersion, to me, happened, and that's my example to answer your question.
+        </div>
+    </div>
+
+    <div style="position: relative; margin-top: 40px;">
+        <div class="image-grid-2">
+            <div class="offset-frame"><img src="/assets/images/Operation 1.jpg" alt="Operation Tango"></div>
+            <div class="offset-frame"><img src="/assets/images/Operation 2.jpg" alt="Operation Tango Hacker UI"></div>
+        </div>
+        <div class="img-caption">Operation: Tango - The collapse of everyday life and game diegesis.</div>
+        
+        <div class="attachment-note" style="top: -25px; left: -20px; transform: rotate(-4deg);">
+            <a href="https://store.steampowered.com/app/1335790/Operation_Tango/" target="_blank"><span class="icon">🔗</span>Steam Link</a>
+        </div>
+    </div>
+
+    <h2>03 / CAMERA & VISUAL CRITIQUE <span class="timestamp">[06:11]</span></h2>
+    <div class="qa-block">
+        <div class="question">Things are so dynamic compared to flat posters or websites, especially with those 2D styles. How do you feel the camera angles mess with a player's psychology and overall vibe of the screen, since you also learn film studies?</div>
+        <div class="answer">
+            I think compared to film studies, game studies see camera, or they use camera, not only through camera angles or camera movements and cinematography, but they also have to concern the affordances of the camera. Legibility is a priority. Not like films, we can have those visceral interactions or whatever. But for games, a camera has to at least have the function to reveal what's happening, and it has a <span class="tape-highlight">barrier between pure interaction and pure animation</span>. Because I play very little first-person games, I prefer those puzzle solving games, but I still feel like camera angles is interesting when we think about who initiates the movement. For example, in <span class="game-title">Chants of Sennaar</span>, sometimes it's the movement of the main character that triggers the 3D camera to chase after it. But sometimes it's maybe a more omnipotent other that initiates the camera and that shift of perspective is what I found interesting.
+        </div>
+    </div>
+
+    <div class="clearfix" style="margin-top: 40px;">
+        <div class="offset-frame" style="float: left; width: 30%; margin-right: 40px; margin-bottom: 20px;">
+            <img src="/assets/images/Genshin 1.webp" alt="Genshin Impact">
+            <div class="img-caption" style="text-align: center;">Genshin Impact Character</div>
+        </div>
+        
+        <div class="qa-block" style="overflow: hidden; border-left: none; padding-left: 0; margin-top: 0;">
+            <div class="question">On the flip side though, as someone studying this professionally, have you ever played a game where the visual design on screen was just terrible, or you think it can be improved? <span class="timestamp">[07:53]</span></div>
+            <div class="answer">
+                That's a good one, because legibility is the priority. I think for me, the games visual design I dislike the most is some Japanese and Chinese anime games, for example, <span class="game-title">Genshin Impact</span>. I don't know their English name, but I'm not commenting about the UI style, but I'm more thinking about how its narration, interaction and depiction of female characters, kind of promotes a <span class="tape-highlight">subservient gender representation</span>, and that's what I dislike. Because gameplay is not only about gameplay, but it's about your presentation on screen, and then players' off-screen interaction. We sometimes do cosplay. They sometimes mimic the characters. Younger players even take them as idols, and at this time, female characters, they appear virtuous. They highlight their chastity and their naivety and the whiteness of their face. I don't think that's a proper gender representation.
+            </div>
+        </div>
+    </div>
+
+    <h2>04 / ARTISTIC ADVICE <span class="timestamp">[10:25]</span></h2>
+    <div class="qa-block">
+        <div class="question">Because my project is just turning this interview into a web page, do you have any interested games visual style, or what style do you prefer when I'm making this web page?</div>
+        <div class="answer">
+            I think that's really creative of you. And for the visual style, um, I like <span class="game-title">Where the Water Tastes Like Wine</span>. So it's actually not a game game, but rather a game based novel, and each character have their evolution, like, for example, when you first meet a character, they appear humane but <span class="tape-highlight">once you engage with them further, their spirituality speaks louder than their physique.</span> So that we see maybe cranes, we see bears and we see their spiritual animals let's overtake this frame of their body. And the game I can think of is perhaps <span class="game-title">Pentiment</span>. So it's using typography as a means of narration, like clergies. And, you know, maybe educated persons, they have a more delicate typography, where mountain people use handwriting in their dialog. So I think that's what maybe you want to think about.
+        </div>
+    </div>
+
+    <h3 style="font-family: 'Cinzel', serif; color: #4a3b2c; margin-top: 60px;">I. Evolution <span class="timestamp">[10:41]</span></h3>
+    <div style="position: relative;">
+        <div class="evolution-interactive offset-frame" style="width: 100%;">
+            <img src="/assets/images/Where 4.jpg" class="form-human" alt="Human Form">
+            <img src="/assets/images/Where 5.jpg" class="form-spirit" alt="Spirit Form">
+        </div>
+        <div class="attachment-note" style="bottom: 40px; right: 20px; transform: rotate(-3deg);">
+            <a href="https://store.steampowered.com/app/447120/Where_the_Water_Tastes_Like_Wine/" target="_blank"><span class="icon">🔗</span>Steam Link</a>
+        </div>
+    </div>
+    <div class="img-caption">"Spirituality speaks louder than their physique."</div>
+
+    <h3 style="font-family: 'Cinzel', serif; color: #4a3b2c;">II. Typography <span class="timestamp">[11:15]</span></h3>
+    <div style="position: relative;">
+        <div class="offset-frame" style="width: 100%;"><img src="/assets/images/Pentiment 1.avif" alt="Pentiment"></div>
+        <div class="attachment-note" style="top: -15px; right: -15px; transform: rotate(5deg);">
+            <a href="https://store.steampowered.com/app/1205520/Pentiment/" target="_blank"><span class="icon">🔗</span>Steam Link</a>
+        </div>
+    </div>
+    <div class="img-caption">Typography as a means of narration.</div>
+
+</div>
+
+</body>
+</html>
